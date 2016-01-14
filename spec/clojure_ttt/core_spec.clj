@@ -2,6 +2,8 @@
   (:require [speclj.core :refer :all]
             [clojure-ttt.core :refer :all]))
 
-(describe "a test"
-  (it "FIXME, I fail."
-    (should= 0 1)))
+(describe "board-area"
+  (it "creates a board with a specified height and width"
+    (should= (vec (range 9)) (board-area 3 3))))
+
+
