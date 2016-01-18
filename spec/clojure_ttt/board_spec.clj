@@ -1,6 +1,6 @@
-(ns clojure-ttt.core-spec
+(ns clojure-ttt.board-spec
   (:require [speclj.core :refer :all]
-            [clojure-ttt.core :refer :all]))
+            [clojure-ttt.board :refer :all]))
 
 (describe "board-area"
   (it "creates a board with a specified height and width"

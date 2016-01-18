@@ -1,4 +1,4 @@
-(ns clojure-ttt.core)
+(ns clojure-ttt.board)
 
 (defn board-area [height width]
   (vec (range (* height width))))
