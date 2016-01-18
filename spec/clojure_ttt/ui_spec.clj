@@ -17,7 +17,7 @@
         (prompt "Please enter your name")))))
 
   (it "prints the board"
-   (should= "X 1 2
-             3 O 5
-             6 7 8"(with-out-str (
-      (print-board ["X" 1 2 3 "O" 5 6 7 8]))))))
+   (should= (str  "X 1 2\n"
+                  "3 O 5\n"
+                  "6 7 8\n")
+      (with-out-str (print-board ["X" 1 2 3 "O" 5 6 7 8])))))

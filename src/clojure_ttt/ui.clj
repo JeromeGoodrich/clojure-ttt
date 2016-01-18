@@ -5,6 +5,9 @@
   (read-line))
 
 (defn print-board [board]
-  (let [rows (map #(apply str %) (partition 3 board))]
-    (println rows)))
+  (->> (partition 3 board)
+       (map #(apply str %))
+       (map #(clojure.string/join " " %))
+       (map println)
+       (dorun)))
 
