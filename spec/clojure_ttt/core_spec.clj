@@ -23,8 +23,25 @@
 (describe "end-game"
   (it "ends the game with a winner"
     (should= "Game over! Jerome wins!"
-      (with-out-str (end-game [{:name "Jerome" :marker "X"}] [ "X" "X" "X" 3 4 5 6 7 8]))))
+      (with-out-str (end-game ["X" "X" "X" 3 4 5 6 7 8]
+                              [{:name "Jerome" :marker "X"}]))))
 
   (it "ends the game as a tie"
     (should= "Game over! It's a tie!"
-      (with-out-str (end-game [{:name "TicTacJoe" :marker "O"}] ["X" "O" "X" "O" "X" "X" "O" "X" "O"])))))
+      (with-out-str (end-game ["X" "O" "X" "O" "X" "X" "O" "X" "O"]
+                              [{:name "TicTacJoe" :maker "O"}])))))
+
+(describe "game-loop"
+  (context "plays through the last move of a game"
+    (it "ends in a tie"
+      (pending "multiple outputs")
+      (should= "Game over! It's a tie!"
+        (with-in-str "7"
+        (with-out-str (game-loop ["X" "O" "X" "O" "X" "X" "O" 7 "O"]
+                                 [{:name "Jerome" :marker "X"} {:name "Sol" :marker "O"}])))))
+
+    (it "ends in a win"
+      (should= "Game over! Jerome wins!"
+        (with-in-str "6"
+         (with-out-str (game-loop ["X" "O" "X" "O" "X" 5 6 7 "O"]
+                                  [{:name "Jerome" :marker "X"} {:name "Sol" :marker "O"}])))))))

@@ -2,14 +2,14 @@
   (:require [speclj.core :refer :all]
             [clojure-ttt.board :refer :all]))
 
-(describe "board-area"
-  (it "creates a board with a specified height and width"
-    (should= (vec (range 9)) (board-area 3 3))))
+(describe "create-board"
+  (it "creates a board of a specified sizw"
+    (should= (vec (range 9)) (create-board 3))))
 
 (describe "marking the board"
   (it "mark the board with a given marker on a specified spot"
-    (should= ["X" 1 2 3 4 5 6 7 8] (mark-spot "X" 0 [0 1 2 3 4 5 6 7 8]))
-    (should= ["X" 1 2 "O" 4 5 6 7 8] (mark-spot "O" 3 ["X" 1 2 3 4 5 6 7 8]))))
+    (should= ["X" 1 2 3 4 5 6 7 8] (mark-spot "X" "0" [0 1 2 3 4 5 6 7 8]))
+    (should= ["X" 1 2 "O" 4 5 6 7 8] (mark-spot "O" "3" ["X" 1 2 3 4 5 6 7 8]))))
 
 (describe "winning horizontally"
   (it "declares a winner with the correct number of adjacent horizontal markers"

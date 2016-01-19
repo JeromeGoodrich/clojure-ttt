@@ -1,10 +1,11 @@
 (ns clojure-ttt.board)
 
-(defn board-area [height width]
-  (vec (range (* height width))))
+(defn create-board [size]
+  (vec (range (* size size))))
 
 (defn mark-spot [marker spot board]
-  (assoc board spot marker))
+  (let [spot (read-string spot)]
+    (assoc board spot marker)))
 
 (defn is-won? [row]
   (apply = row))
