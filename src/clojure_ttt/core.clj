@@ -33,7 +33,7 @@
 ;           board board]
 ;      (if (board/game-over? board))
 ;        (end-game board players)
-;          (recur (board/mark-spot (first players :marker)
+;          (recur (board/mark-spot (:marker (first players))
 ;                                  (make-move (first players))
 ;                                  board)
 ;             (reverse players))))
