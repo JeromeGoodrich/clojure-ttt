@@ -1,6 +1,7 @@
 (ns clojure-ttt.core
   (:require [clojure-ttt.ui :refer :all]
-           [clojure-ttt.board :refer :all]))
+            [clojure-ttt.board :refer :all]
+            [clojure.tools.cli :refer :all]))
 
 (defn create-players [number]
   (cond
@@ -15,6 +16,17 @@
                                    :marker (prompt "Select a marker (it can be any letter)")}
                                   {:name (prompt "Player 2, what is your name?")
                                    :marker (prompt "Select a marker (it can be any letter not chosen by player 1)")}]] players)))
+(def cli-options
+  [["-p1" "--player1 TYPE" "Player1 type"]
+   ["-p2" "--player2 TYPE" "Player2 type"]
+   ["-m1" "--marker1 MARKER" "Player1 marker" :default "X"]
+   ["-m2" "--marker2 MARKER" "Player2 marker" :default "O"]
+   ["-b"  "--board SIZE" "board size" :default 3 :parse-fn #(Integer/parseInt %)]
+   ["-h"  "--help"]])
+
+
+
+
 
 (defn ai-rules [board]
   (str (some #(when (number? %) %) board)))
