@@ -16,24 +16,32 @@
                                   {:name (prompt "Player 2, what is your name?")
                                    :marker (prompt "Select a marker (it can be any letter not chosen by player 1)")}]] players)))
 
-(defn make-move [player]
+(defn ai-rules [board]
+  (str (some #(when (number? %) %) board)))
+
+(defn make-move [board player]
   (cond
-    (= (:name (first player)) "TicTacJoe") true
+    (= (:name (first player)) "TicTacJoe") (ai-rules board)
     :else (prompt "Select a space using the numbers of the spaces above")))
 
 (defn end-game [board players]
   (cond
     (clojure-ttt.board/tie-game? board) (print "Game over! It's a tie!")
-    :else (print (str "Game over! " (:name (first players)) " wins!"))))
+    :else (print (str "Game over! " (:name (second players)) " wins!"))))
 
 (defn game-loop [board players]
-    (loop [players players
-           board board]
+    (loop [board board
+           players players]
+      (clojure-ttt.ui/print-board board)
       (if (clojure-ttt.board/game-over? board)
         (end-game board players)
         (recur (clojure-ttt.board/mark-spot (:marker (first players))
-                                            (make-move (first players))
+                                            (make-move board players)
                                             board)
                (reverse players)))))
 
+(defn -main []
+  (let [board (clojure-ttt.board/create-board 3)
+       players (create-players (prompt "Welcome to TicTacToe! How many humans will be playing?"))]
+ (game-loop board players)))
 
