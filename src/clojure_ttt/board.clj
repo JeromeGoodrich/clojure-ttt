@@ -32,5 +32,8 @@
 (defn tie-game? [board]
   (not-any? number? board))
 
+(defn win-game? [board]
+  (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner? tie-game?]))
+
 (defn game-over? [board]
   (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner? tie-game?]))

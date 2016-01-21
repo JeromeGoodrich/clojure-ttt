@@ -49,5 +49,7 @@
 
 (describe "ai-rules"
   (it "selects the only available space on the board"
-    (should="7" (ai-rules ["X" "O" "X" "O" "X" "X" "O" 7 "O"]))))
+    (should="7" (ai-rules ["X" "O" "X" "O" "X" "X" "O" 7 "O"])))
 
+  (it "selects a winning move over a non-winning move"
+    (should= "6" (ai-rules ["X" "O" "X" "O" "X" 5 6 7 "O"] "X"))))
