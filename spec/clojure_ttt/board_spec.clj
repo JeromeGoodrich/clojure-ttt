@@ -8,8 +8,8 @@
 
 (describe "marking the board"
   (it "mark the board with a given marker on a specified spot"
-    (should= ["X" 1 2 3 4 5 6 7 8] (mark-spot "X" "0" [0 1 2 3 4 5 6 7 8]))
-    (should= ["X" 1 2 "O" 4 5 6 7 8] (mark-spot "O" "3" ["X" 1 2 3 4 5 6 7 8]))))
+    (should= ["X" 1 2 3 4 5 6 7 8] (mark-spot "X" 0 [0 1 2 3 4 5 6 7 8]))
+    (should= ["X" 1 2 "O" 4 5 6 7 8] (mark-spot "O" 3 ["X" 1 2 3 4 5 6 7 8]))))
 
 (describe "winning horizontally"
   (it "declares a winner with the correct number of adjacent horizontal markers"

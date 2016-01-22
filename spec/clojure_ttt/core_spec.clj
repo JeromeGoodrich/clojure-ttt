@@ -15,7 +15,7 @@
 
 (describe "make-move"
   (it "selects a spot on the board to move to"
-    (should= "5"
+    (should= 5
       (with-in-str "5"
         (make-move ["X" "O" "X" 3 "X" 5 "O" 7 "O"]
                    [{:name "Jerome" :marker "X"}])))))
@@ -49,7 +49,7 @@
 
 (describe "ai-rules"
   (it "selects the only available space on the board"
-    (should="7" (ai-rules ["X" "O" "X" "O" "X" "X" "O" 7 "O"])))
+    (should= 7 (ai-make-move ["X" "O" "X" "O" "X" "X" "O" 7 "O"] ["X" "O"])))
 
   (it "selects a winning move over a non-winning move"
-    (should= "6" (ai-rules ["X" "O" "X" "O" "X" 5 6 7 "O"] "X"))))
+    (should= 6 (ai-make-move ["X" "O" "X" "O" "X" 5 6 7 "O"] ["X" "O"]))))

@@ -31,7 +31,7 @@
 
 
 (defn zip-spaces-and-boards [spaces boards]
- (map #(zipmap [:space :board] %) (map vector spaces boards)))
+  (map #(zipmap [:space :board] %) (map vector spaces boards)))
 
 (defn find-empty-spaces [board]
   (filter number? board))
@@ -40,38 +40,39 @@
   (map #(mark-spot (first markers) % board) spaces))
 
 (defn max-by-score [scored-boards]
- (apply max-key :score scored-boards))
+  (print scored-boards)
+  (apply max-key :score scored-boards))
 
 (defn min-by-score [scored-boards]
   (apply min-key :score scored-boards))
 
-(defn ai-config [board markers]
-  (let [empty-spaces (find-empty-spaces board)
-        possible-boards (create-possible-boards board empty-spaces markers)]
-    (zip-spaces-and-boards empty-spaces possible-boards)))
 
-(defn score-board [unscored-board-map markers]
+(defn score-board [space-with-board markers]
   (let [my-marker (first markers)]
 
-    (loop [board-vector (:board unscored-board-map)
+    (loop [board (:board space-with-board)
            marker (first markers)]
       (cond
-        (and (win-game? board-vector) (= marker my-marker)) (conj unscored-board-map {:score 10})
-        (and (win-game? board-vector) (not (= marker my-marker))) (conj unscored-board-map {:score -10})
-        (tie-game? board-vector) (conj unscored-board-map {:score 0})
-        :else (let [next-node-unscored-boards-map (ai-config board-vector markers)
-                    scored-boards-map (map #(score-board % markers) next-node-unscored-boards-map)]
+        (and (win-game? board) (= marker my-marker)) (conj space-with-board {:score 10})
+        (and (win-game? board) (not (= marker my-marker))) (conj space-with-board {:score -10})
+        (tie-game? board) (conj space-with-board {:score 0})
+        :else (let [empty-spaces (find-empty-spaces board)
+                    possible-boards (map #(create-possible-boards board empty-spaces markers))
+                    boards-with-spaces (zip-spaces-and-boards empty-spaces possible-boards)
+                    scored-boards (map #(score-board % markers) boards-with-spaces)]
                 (if (= marker my-marker)
-                  (recur (max-by-score scored-boards-map)(reverse markers))
-                  (recur (min-by-score scored-boards-map)(reverse markers))))))))
+                  (recur (max-by-score scored-boards)(reverse markers))
+                  (recur (min-by-score scored-boards)(reverse markers))))))))
 
-(defn score-boards [unscored-boards markers]
-   (map #(score-board % markers) unscored-boards))
+(defn score-boards [spaces-with-boards markers]
+   (map #(score-board % markers) (apply map spaces-with-boards)))
 
 (defn ai-make-move [board markers]
-  (let [unscored-boards (ai-config board markers)
-        scored-boards-coll (score-boards unscored-boards markers)]
-  (:space (max-by-score scored-boards-coll))))
+  (let [empty-spaces (find-empty-spaces board)
+        possible-boards (create-possible-boards board empty-spaces markers)
+        board-space-maps (zip-spaces-and-boards empty-spaces possible-boards)
+        scored-boards (score-boards board-space-maps markers)]
+  (:space (max-by-score scored-boards))))
 
 (defn make-move [board players]
   (if (= (:name (first players)) "TicTacJoe")

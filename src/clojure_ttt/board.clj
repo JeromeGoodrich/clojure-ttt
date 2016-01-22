@@ -4,8 +4,7 @@
   (vec (range (* size size))))
 
 (defn mark-spot [marker spot board]
-  (let [spot (read-string spot)]
-    (assoc board spot marker)))
+    (assoc board spot marker))
 
 (defn is-won? [row]
   (apply = row))
