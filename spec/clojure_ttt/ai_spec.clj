@@ -25,9 +25,14 @@
                                6  "X"  8 ] ["O" "X"])))
 
   (it "blocks the opponent from winning"
-    (should= 1 (ai-make-move ["X" 1 "X"
-                               3 "O" 5
-                               6  7  8] ["O" "X"])))
+    (should= 1 (ai-make-move ["X"  1  "X"
+                              "X" "O" "O"
+                              "O"  7   8] ["O" "X"])))
+
+  (it "blocks the opponent from winning"
+    (should= 1 (ai-make-move ["X"  1  "X"
+                              3  "O"  5
+                              6  7   8] ["O" "X"])))
 
   (it "will prevent the opponent from making a 'fork'"
     (should= 6 (ai-make-move ["X"   1    2
@@ -40,8 +45,7 @@
                               "X" 7 "O"] ["O" "X"])))
 
   (it "will move to a corner on the first move"
-    (pending "")
-    (should= 6 (ai-make-move [0 1 2
+    (should= 8 (ai-make-move [0 1 2
                               3 4 5
                               6 7 8] ["X" "O"]))))
 
