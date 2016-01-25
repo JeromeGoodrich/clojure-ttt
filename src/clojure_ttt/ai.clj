@@ -3,14 +3,8 @@
             [clojure-ttt.board :refer :all]
             [clojure.tools.cli :refer :all]))
 
-(defn zip-spaces-and-boards [spaces boards]
- (map #(zipmap [:space :board] %) (map vector spaces boards)))
-
-(defn find-empty-spaces [board]
+(defn find-unmarked-spaces [board]
   (filter number? board))
-
-(defn get-initial-marker [markers]
-    (first markers))
 
 (defn create-possible-boards [board spaces markers]
   (map #(mark-spot (first markers) % board) spaces))
@@ -21,43 +15,30 @@
 (defn min-by-score [scored-boards]
   (apply min-key :score scored-boards))
 
-(defn ai-config [board markers]
-  (let [empty-spaces (find-empty-spaces board)
-        possible-boards (create-possible-boards board empty-spaces markers)]
-    (zip-spaces-and-boards empty-spaces possible-boards)))
-
-(defn score-board [space unscored-board markers initial-marker]
+(defn find-space-score [space board markers starting-marker]
     (let [current-marker (first markers)]
       (cond
-        ;evaluates terminal states based on comparison between initial and current marker
-        (and (win-game? unscored-board) (= current-marker initial-marker))
-        (conj space {:score  10})
-        (and (win-game? unscored-board) (not (= current-marker initial-marker)))
-        (conj space {:score -10})
-        (tie-game? unscored-board) (conj space {:score 0})
-
+        (and (win-game? board)
+             (= current-marker starting-marker)) (conj space {:score  10})
+        (and (win-game? board)
+             (not (= current-marker starting-marker))) (conj space {:score -10})
+        (tie-game? board) (conj space {:score 0})
         :else (let [new-markers (reverse markers)
-                    empty-spaces (find-empty-spaces unscored-board)
-                    next-node-boards (create-possible-boards unscored-board
-                                                             empty-spaces
-                                                             new-markers)
-                    scored-boards (map #(score-board space
-                                                     %
-                                                     new-markers
-                                                     initial-marker) next-node-boards)]
+                    unmarked-spaces (find-unmarked-spaces board)
+                    boards (create-possible-boards board unmarked-spaces new-markers)
+                    spaces-with-scores (map #(find-space-score space % new-markers starting-marker) boards)]
+                (if (not (= current-marker starting-marker))
+                  (max-by-score spaces-with-scores)
+                  (min-by-score spaces-with-scores))))))
 
-                (if (not (= current-marker initial-marker))
-                  (max-by-score scored-boards)
-                  (min-by-score scored-boards))))))
-
-(defn score-boards [spaces unscored-boards markers initial-marker]
-  (map #(score-board %1  %2 markers initial-marker) spaces unscored-boards))
+(defn get-spaces-with-scores [spaces boards markers starting-marker]
+  (map #(find-space-score %1  %2 markers starting-marker) spaces boards))
 
 (defn ai-make-move [board markers]
-  (let [empty-spaces (find-empty-spaces board)
-        unscored-boards (create-possible-boards board empty-spaces markers)
-        spaces-map (map #(hash-map :space %) empty-spaces)
-        initial-marker (get-initial-marker markers)
-        scored-boards-coll (score-boards spaces-map unscored-boards markers initial-marker)]
-    (:space (max-by-score scored-boards-coll))))
+  (let [unmarked-spaces (find-unmarked-spaces board)
+        boards (create-possible-boards board unmarked-spaces markers)
+        spaces (map #(hash-map :space %) unmarked-spaces)
+        starting-marker (first markers)
+        spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker)]
+    (:space (max-by-score spaces-with-scores))))
 
