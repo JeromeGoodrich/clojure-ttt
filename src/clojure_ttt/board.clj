@@ -32,7 +32,7 @@
   (not-any? number? board))
 
 (defn win-game? [board]
-  (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner? tie-game?]))
+  (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner?]))
 
 (defn game-over? [board]
   (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner? tie-game?]))

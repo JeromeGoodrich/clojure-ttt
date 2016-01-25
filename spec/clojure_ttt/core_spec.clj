@@ -18,7 +18,14 @@
     (should= 5
       (with-in-str "5"
         (make-move ["X" "O" "X" 3 "X" 5 "O" 7 "O"]
-                   [{:name "Jerome" :marker "X"}])))))
+                   [{:name "Jerome" :marker "X"}
+                    {:name "TicTacJoe" :marker "O"}]))))
+
+  (it "computer move"
+    (should= 5
+      (make-move ["X" 2 "O" 3 "X" 5 "X" 7 "O"]
+                   [{:name "TicTacJoe" :marker "O"}
+                    {:name "Jerome" :marker "X"}]))))
 
 (describe "end-game"
   (it "ends the game with a winner"
@@ -47,9 +54,3 @@
          (with-out-str (game-loop ["X" "O" "X" "O" "X" 5 6 7 "O"]
                                   [{:name "Jerome" :marker "X"} {:name "Sol" :marker "O"}])))))))
 
-(describe "ai-rules"
-  (it "selects the only available space on the board"
-    (should= 7 (ai-make-move ["X" "O" "X" "O" "X" "X" "O" 7 "O"] ["X" "O"])))
-
-  (it "selects a winning move over a non-winning move"
-    (should= 6 (ai-make-move ["X" "O" "X" "O" "X" 5 6 7 "O"] ["X" "O"]))))
