@@ -50,6 +50,7 @@
                               "O" 7 "X"] ["O" "X"])))
 
   (it "will move to a corner on the first move"
+    (pending "test takes a long time")
     (should= 8 (ai-make-move [0 1 2
                               3 4 5
                               6 7 8] ["X" "O"]))))

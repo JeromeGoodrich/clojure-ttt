@@ -18,18 +18,16 @@
                                   {:name (prompt "Player 2, what is your name?")
                                    :marker (prompt "Select a marker (it can be any letter not chosen by player 1)")}]] players)))
 (def cli-options
-  [["-p1" "--player1 TYPE" "Player1 type"]
-   ["-p2" "--player2 TYPE" "Player2 type"]
-   ["-m1" "--marker1 MARKER" "Player1 marker"
+  [["-p1" "--player1 MARKER" "Player1 marker"
     :default "X"]
-   ["-m2" "--marker2 MARKER" "Player2 marker"
+   ["-p2" "--player2 MARKER" "Player2 marker"
     :default "O"]
    ["-b"  "--board SIZE" "board size"
     :default 3
     :parse-fn #(Integer. %)]
    ["-h"  "--help"]])
 
-(defn error-mesg [errors]
+(defn error-msg [errors]
   (print "The following errors occurred while parsing your command:")
   (println errors))
 
@@ -54,9 +52,41 @@
                                     board)
                (reverse players)))))
 
-(defn -main []
-  (let [board (clojure-ttt.board/create-board 3)
-       players (create-players (prompt "Welcome to TicTacToe! How many humans will be playing?"))]
+(defn exit [status message]
+  (println message)
+  (System/exit status))
+
+(defn usage [options-summary]
+  (->>["Welcome to Clojure TicTacToe."
+       ""
+       "Usage: lein run action [options]"
+       ""
+       "Examples:"
+       "  lein run me-first -p1 x -p2 o      comp v. human, human goes first"
+       "  lein run head-to-head -p2 q -p2 -b 4    human v. human on a 4x4 board"
+       ""
+       "Options Summary:"
+       options-summary
+       ""
+       "Actions:"
+       "  me-first       play first against computer"
+       "  comp-first     play second against the computer"
+       "  head-to-head   play against another human"]
+    (string/join \newline)))
+
+(defn -main [& args]
+  (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)
+        board (clojure-ttt.board/create-board 3)
+        players (create-players (prompt "Welcome to TicTacToe! How many humans will be playing?"))]
+    (cond
+      (:help options) (exit 0 (usage summary))
+      (not = (count arguments)) (exit 1 (usage summary)))
+      errors (exit 1 (error-msg)))
+    (case (first arguments)
+      "me-first" (me-first-config options)
+      "comp-first" (comp-first-config options)
+      "head-to-head" (head-to-head-config options)
+      (exit 1 (usage summary))
  (game-loop board players)))
 
 
