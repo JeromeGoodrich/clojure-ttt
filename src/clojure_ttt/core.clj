@@ -33,14 +33,14 @@
        (clojure.string/join \newline errors)))
 
 (defn make-move [board players]
-      (if (= (:name (first players)) "TicTacJoe")
+      (if (= (:type (first players)) "computer")
         (ai-make-move board (map #(:marker %) players))
         (Integer. (prompt "Select a space using the numbers of the spaces above"))))
 
 (defn end-game [board players]
   (cond
     (tie-game? board) (print "Game over! It's a tie!")
-    :else (print (str "Game over! " (:name (second players)) " wins!"))))
+    :else (print (str "Game over! " (:marker (second players)) " wins!"))))
 
 (defn game-loop [board players]
     (loop [board board

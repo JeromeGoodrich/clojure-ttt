@@ -18,25 +18,25 @@
     (should= 5
       (with-in-str "5"
         (make-move ["X" "O" "X" 3 "X" 5 "O" 7 "O"]
-                   [{:name "Jerome" :marker "X"}
-                    {:name "TicTacJoe" :marker "O"}]))))
+                   [{:type "human" :marker "X"}
+                    {:type "computer" :marker "O"}]))))
 
   (it "computer move"
     (should= 5
       (make-move ["X" 2 "O" 3 "X" 5 "X" 7 "O"]
-                   [{:name "TicTacJoe" :marker "O"}
-                    {:name "Jerome" :marker "X"}]))))
+                   [{:type "computer" :marker "O"}
+                    {:type "human" :marker "X"}]))))
 
 (describe "end-game"
   (it "ends the game with a winner"
-    (should= "Game over! Jerome wins!"
+    (should= "Game over! X wins!"
       (with-out-str (end-game ["X" "X" "X" 3 4 5 6 7 8]
-                              [{:name "TicTacJoe" :marker "O" } {:name "Jerome" :marker "X"}]))))
+                              [{:type "computer" :marker "O" } {:type "human" :marker "X"}]))))
 
   (it "ends the game as a tie"
     (should= "Game over! It's a tie!"
       (with-out-str (end-game ["X" "O" "X" "O" "X" "X" "O" "X" "O"]
-                              [{:name "TicTacJoe" :maker "O"}])))))
+                              [{:type "computer" :maker "O"}])))))
 
 (describe "game-loop"
   (context "plays through the last move of a game"
@@ -45,12 +45,12 @@
       (should= "Game over! It's a tie!"
         (with-in-str "7"
         (with-out-str (game-loop ["X" "O" "X" "O" "X" "X" "O" 7 "O"]
-                                 [{:name "Jerome" :marker "X"} {:name "Sol" :marker "O"}])))))
+                                 [{:type "human" :marker "X"} {:type "human" :marker "O"}])))))
 
     (it "ends in a win"
       (pending "until refactor")
       (should= "Game over! Jerome wins!"
         (with-in-str "6"
          (with-out-str (game-loop ["X" "O" "X" "O" "X" 5 6 7 "O"]
-                                  [{:name "Jerome" :marker "X"} {:name "Sol" :marker "O"}])))))))
+                                  [{:type "human" :marker "X"} {:type "human" :marker "O"}])))))))
 
