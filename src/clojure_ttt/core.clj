@@ -2,7 +2,8 @@
   (:require [clojure-ttt.ui :refer :all]
             [clojure-ttt.board :refer :all]
             [clojure.tools.cli :refer :all]
-            [clojure-ttt.ai :refer :all]))
+            [clojure-ttt.ai :refer :all]
+            [clojure-ttt.config :refer :all]))
 
 (defn create-players [number]
   (cond
@@ -28,8 +29,8 @@
    ["-h"  "--help"]])
 
 (defn error-msg [errors]
-  (print "The following errors occurred while parsing your command:")
-  (println errors))
+  (str "The following errors occurred while parsing your command:\n\n"
+       (clojure.string/join \newline errors)))
 
 (defn make-move [board players]
       (if (= (:name (first players)) "TicTacJoe")
@@ -72,21 +73,17 @@
        "  me-first       play first against computer"
        "  comp-first     play second against the computer"
        "  head-to-head   play against another human"]
-    (string/join \newline)))
+    (clojure.string/join \newline)))
 
 (defn -main [& args]
-  (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)
-        board (clojure-ttt.board/create-board 3)
-        players (create-players (prompt "Welcome to TicTacToe! How many humans will be playing?"))]
+  (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
     (cond
       (:help options) (exit 0 (usage summary))
-      (not = (count arguments)) (exit 1 (usage summary)))
-      errors (exit 1 (error-msg)))
-    (case (first arguments)
-      "me-first" (me-first-config options)
-      "comp-first" (comp-first-config options)
-      "head-to-head" (head-to-head-config options)
-      (exit 1 (usage summary))
- (game-loop board players)))
+      (not (> 0 (count arguments))) (exit 1 (usage summary)))
+      errors (exit 1 (error-msg errors))
+    (let [config (game-config (first arguments) options)
+          players [(first config) (second config)]
+          board  (nth config 2)]
+      (game-loop board players))))
 
 
