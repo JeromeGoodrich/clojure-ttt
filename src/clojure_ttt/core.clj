@@ -6,9 +6,15 @@
             [clojure-ttt.config :refer :all]))
 
 (defn make-move [board players]
-      (if (= (:type (first players)) "computer")
+  (if (= (:type (first players)) "computer")
         (ai-make-move board (map #(:marker %) players))
-        (Integer. (choose-space players))))
+        (let [space (Integer. (choose-space players))
+              available-moves (find-unmarked-spaces board)]
+          (cond
+           (or (not (number? space))
+               (not (some #(=  space %) (find-unmarked-spaces board))))
+           (do (invalid-move) (make-move board players))
+          :else space))))
 
 (defn game-loop [board players]
       (print-board board)

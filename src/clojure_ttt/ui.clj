@@ -11,6 +11,9 @@
        (map println)
        (dorun)))
 
+(defn invalid-move []
+  (println "Invalid move, please choose a valid space to move to"))
+
 (def cli-options
   [["-p1" "--player1 MARKER" "Player1 marker"
     :default "X"]
@@ -24,6 +27,7 @@
 (defn choose-space [players]
   (let [current-player (:marker (first players))]
   (prompt (str "It is your turn, " current-player ". Choose an unmarked space."))))
+
 
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n"
