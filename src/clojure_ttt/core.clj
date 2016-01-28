@@ -1,7 +1,7 @@
 (ns clojure-ttt.core
   (:require [clojure-ttt.ui :refer :all]
             [clojure-ttt.board :refer :all]
-            [clojure.tools.cli :refer :all]
+            [clojure.tools.cli :refer [parse-opts]]
             [clojure-ttt.ai :refer :all]
             [clojure-ttt.config :refer :all]))
 
@@ -33,6 +33,7 @@
 
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
+    (println (parse-opts args cli-options))
     (cond
       (:help options) (exit 0 (usage summary))
       (not= (count arguments) 1) (exit 1 (usage summary))

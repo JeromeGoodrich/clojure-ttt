@@ -5,19 +5,23 @@
   (read-line))
 
 (defn print-board [board]
-  (->> (partition 3 board)
+  (let [size (int (Math/sqrt  (count board)))]
+  (->> (partition size board)
        (map #(apply str %))
        (map #(clojure.string/join " " %))
        (map println)
-       (dorun)))
+       (dorun))
+  (print (str "----------------\n"))))
 
 (defn invalid-move []
   (println "Invalid move, please choose a valid space to move to"))
 
 (def cli-options
-  [["-p1" "--player1 MARKER" "Player1 marker"
+  [["-f" "--first MARKER" "Player1 marker"
+    :id :player1
     :default "X"]
-   ["-p2" "--player2 MARKER" "Player2 marker"
+   ["-s" "--second MARKER" "Player2 marker"
+    :id :player2
     :default "O"]
    ["-b"  "--board SIZE" "board size"
     :default 3
@@ -39,8 +43,8 @@
        "Usage: lein run action [options]"
        ""
        "Examples:"
-       "  lein run me-first -p1 x -p2 o      comp v. human, human goes first"
-       "  lein run head-to-head -p2 q -p2 -b 4    human v. human on a 4x4 board"
+       "  lein run me-first -f x -s o      comp v. human, human goes first"
+       "  lein run head-to-head -f q -s H -b 4    human v. human on a 4x4 board"
        ""
        "Options Summary:"
        options-summary

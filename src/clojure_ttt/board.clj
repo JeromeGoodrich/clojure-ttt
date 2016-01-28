@@ -13,19 +13,24 @@
   (some true? (map is-won? lines)))
 
 (defn horizontal-winner? [board]
-  (let [rows (partition 3 board)]
+  (let [size (int (Math/sqrt (count board)))
+        rows (partition size board)]
     (has-winner? rows)))
 
 (defn vertical-winner? [board]
-  (let [cols (->> board
-               (partition 3)
+  (let [size (int (Math/sqrt (count board)))
+        cols (->> board
+               (partition size)
                (apply interleave)
-               (partition 3))]
+               (partition size))]
     (has-winner? cols)))
 
 (defn diagonal-winner? [board]
-  (let [diag1 (map #(get board %) [0 4 8])
-        diag2 (map #(get board %) [2 4 6])]
+  (let [size (int (Math/sqrt (count board)))
+        diag-spaces1 (take size (iterate (partial + (+ size 1)) 0))
+        diag-spaces2 (take size (iterate (partial + (- size 1)) (- size 1)))
+        diag1 (map #(get board %) diag-spaces1)
+        diag2 (map #(get board %) diag-spaces2)]
     (has-winner? [diag1 diag2])))
 
 (defn tie-game? [board]
