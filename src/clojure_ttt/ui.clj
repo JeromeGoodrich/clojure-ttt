@@ -19,7 +19,8 @@
 (def cli-options
   [["-f" "--first MARKER" "Player1 marker"
     :id :player1
-    :default "X"]
+    :default "X"
+    :validate [#(= (count %) 1) "Marker is too long"]]
    ["-s" "--second MARKER" "Player2 marker"
     :id :player2
     :default "O"]
@@ -31,7 +32,6 @@
 (defn choose-space [players]
   (let [current-player (:marker (first players))]
   (prompt (str "It is your turn, " current-player ". Choose an unmarked space."))))
-
 
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n"
@@ -56,7 +56,7 @@
     (clojure.string/join \newline)))
 
 (defn winner [players]
-  (print (str "Game over! " (:marker (second players)) " wins!")))
+  (print (str "Game over! " (:marker (second players)) " wins!\n")))
 
 (defn tie []
-  (print "Game over! It's a tie!"))
+  (print (str "Game over! It's a tie!\n")))
