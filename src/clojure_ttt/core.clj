@@ -5,16 +5,6 @@
             [clojure-ttt.ai :refer :all]
             [clojure-ttt.config :refer :all]))
 
-(defn exit [status message]
-  (println message)
-  (System/exit status))
-
-(defn human-make-move [board players]
-  (try (Integer. (choose-space players))
-    (catch Exception e (do
-                         (print (str (.getMessage e) " That's not a number. Let's try that again!\n"))
-                         (human-make-move board players)))))
-
 (defn make-move [board players]
   (if (= (:type (first players)) "computer")
     (ai-make-move board (map #(:marker %) players))

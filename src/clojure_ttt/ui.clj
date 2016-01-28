@@ -4,6 +4,10 @@
   (println message)
   (read-line))
 
+(defn exit [status message]
+  (println message)
+  (System/exit status))
+
 (defn print-board [board]
   (let [size (int (Math/sqrt  (count board)))]
   (->> (partition size board)
@@ -32,6 +36,12 @@
 (defn choose-space [players]
   (let [current-player (:marker (first players))]
   (prompt (str "It is your turn, " current-player ". Choose an unmarked space."))))
+
+(defn human-make-move [board players]
+  (try (Integer. (choose-space players))
+    (catch Exception e (do
+                         (print (str (.getMessage e) " That's not a number. Let's try that again!\n"))
+                         (human-make-move board players)))))
 
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n"

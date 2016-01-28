@@ -1,2 +1,0 @@
-(ns clojure-ttt.player)
-
