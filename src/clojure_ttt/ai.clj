@@ -35,10 +35,12 @@
   (map #(find-space-score %1  %2 markers starting-marker) spaces boards))
 
 (defn ai-make-move [board markers]
-  (let [unmarked-spaces (find-unmarked-spaces board)
+ (if (= (count board) (count (find-unmarked-spaces board)))
+   8
+   (let [unmarked-spaces (find-unmarked-spaces board)
         boards (create-possible-boards board unmarked-spaces markers)
         spaces (map #(hash-map :space %) unmarked-spaces)
         starting-marker (first markers)
         spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker)]
-    (:space (max-by-score spaces-with-scores))))
+    (:space (max-by-score spaces-with-scores)))))
 
