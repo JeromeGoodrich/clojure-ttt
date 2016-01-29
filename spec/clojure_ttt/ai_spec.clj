@@ -1,6 +1,39 @@
 (ns clojure-ttt.ai-spec
   (:require [speclj.core :refer :all]
-            [clojure-ttt.ai :refer :all]))
+            [clojure-ttt.ai :refer :all]
+            [clojure-ttt.board :refer :all]))
+
+
+(defn random-ai [board markers]
+  (rand-nth (find-unmarked-spaces board)))
+
+
+(defn gen-all-boards [board markers starting-marker ai]
+  (let [current-marker (first markers)]
+  (cond
+    (and (win-game? board)(= starting-marker current-marker)) true
+    (and (win-game? board)(not (= starting-marker current-marker))) false
+    (tie-game? board) true
+    :else
+      (if (= current-marker starting-marker)
+        (let [unmarked-spaces (find-unmarked-spaces board)
+              boards (create-possible-boards board unmarked-spaces markers)]
+          (map #(gen-all-boards % (reverse markers) starting-marker ai) boards))
+        (let [move (ai board markers)
+              board (mark-spot (first markers) move board)]
+          (gen-all-boards board (reverse markers) starting-marker ai))))))
+
+(defn mock-game-loop [board markers]
+  (cond
+    (win-game? board) false
+    (tie-game? board) true
+    :else (let [marker (first markers)
+                spot (ai-make-move board markers)
+                board (mark-spot marker spot board)]
+             (mock-game-loop board (reverse markers)))))
+
+
+
 
 (describe "ai-performance"
 
@@ -49,8 +82,13 @@
                                3 "X" 5
                               "O" 7 "X"] ["O" "X"])))
 
+  (it "a random ai will lose if going through all possible game states"
+    (should= true  (some false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" random-ai)))))
+
+  (it "minimax ai will never lose"
+    (should-not (some false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" ai-make-move)))))
+
   (it "will move to a corner on the first move"
-    (pending "test takes a long time")
     (should= 8 (ai-make-move [0 1 2
                               3 4 5
                               6 7 8] ["X" "O"]))))

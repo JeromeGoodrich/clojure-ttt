@@ -30,7 +30,7 @@
                     boards (create-possible-boards board unmarked-spaces new-markers)
                     spaces-with-scores (map #(find-space-score space % new-markers starting-marker depth) boards)]
                 (cond
-                  (= depth 4) (conj space {:score 0})
+                  (= depth 8) (conj space {:score 0})
                   (not (= current-marker starting-marker)) (max-by-score spaces-with-scores)
                   (= current-marker starting-marker) (min-by-score spaces-with-scores))))))
 
@@ -61,6 +61,5 @@
         spaces (map #(hash-map :space %) unmarked-spaces)
         starting-marker (first markers)
         spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker 0)]
-       (println spaces-with-scores)
     (:space (max-by-score spaces-with-scores)))))
 
