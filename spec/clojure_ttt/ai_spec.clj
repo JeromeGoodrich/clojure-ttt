@@ -8,7 +8,7 @@
   (rand-nth (find-unmarked-spaces board)))
 
 
-(defn gen-all-boards [board markers starting-marker ai]
+(defn gen-all-boards [board markers starting-marker ai depth-limit]
   (let [current-marker (first markers)]
   (cond
     (and (win-game? board)(= starting-marker current-marker)) true
@@ -18,10 +18,10 @@
       (if (= current-marker starting-marker)
         (let [unmarked-spaces (find-unmarked-spaces board)
               boards (create-possible-boards board unmarked-spaces markers)]
-          (map #(gen-all-boards % (reverse markers) starting-marker ai) boards))
-        (let [move (ai board markers)
+          (map #(gen-all-boards % (reverse markers) starting-marker ai depth-limit) boards))
+        (let [move (ai board markers depth-limit)
               board (mark-spot (first markers) move board)]
-          (gen-all-boards board (reverse markers) starting-marker ai))))))
+          (gen-all-boards board (reverse markers) starting-marker ai depth-limit))))))
 
 (defn mock-game-loop [board markers]
   (cond
@@ -87,6 +87,11 @@
 
   (it "minimax ai will never lose"
     (should-not (some false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" ai-make-move)))))
+
+  (it "minimax ai will win around 85% of the time"
+    ; call flatten within the gen-all-boards function, check if value lies within a range of 80 and 85.
+    (should== 83.6  (- 100 (* 100 (float (/ (count (filter false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" ai-make-move 3))))
+                   (count(flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" ai-make-move 3)))))))))
 
   (it "will move to a corner on the first move"
     (should= 8 (ai-make-move [0 1 2

@@ -16,7 +16,7 @@
   (apply min-key :score scored-boards))
 
 
-(defn find-space-score [space board markers starting-marker depth]
+(defn find-space-score [space board markers starting-marker depth depth-limit]
     (let [current-marker (first markers)]
      (cond
         (and (win-game? board)
@@ -28,9 +28,9 @@
                     depth (inc depth)
                     unmarked-spaces (find-unmarked-spaces board)
                     boards (create-possible-boards board unmarked-spaces new-markers)
-                    spaces-with-scores (map #(find-space-score space % new-markers starting-marker depth) boards)]
+                    spaces-with-scores (map #(find-space-score space % new-markers starting-marker depth depth-limit) boards)]
                 (cond
-                  (= depth 8) (conj space {:score 0})
+                  (= depth depth-limit) (conj space {:score 0})
                   (not (= current-marker starting-marker)) (max-by-score spaces-with-scores)
                   (= current-marker starting-marker) (min-by-score spaces-with-scores))))))
 
@@ -50,16 +50,16 @@
 ;                  (max-by-score spaces-with-scores)
 ;                  (min-by-score spaces-with-scores))))))
 
-(defn get-spaces-with-scores [spaces boards markers starting-marker depth]
-  (map #(find-space-score %1  %2 markers starting-marker depth) spaces boards))
+(defn get-spaces-with-scores [spaces boards markers starting-marker depth depth-limit]
+  (map #(find-space-score %1  %2 markers starting-marker depth depth-limit) spaces boards))
 
-(defn ai-make-move [board markers]
+(defn ai-make-move [board markers depth-limit]
  (if (= (count board) (count (find-unmarked-spaces board)))
    8
    (let [unmarked-spaces (find-unmarked-spaces board)
-        boards (create-possible-boards board unmarked-spaces markers)
-        spaces (map #(hash-map :space %) unmarked-spaces)
-        starting-marker (first markers)
-        spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker 0)]
-    (:space (max-by-score spaces-with-scores)))))
+         boards (create-possible-boards board unmarked-spaces markers)
+         spaces (map #(hash-map :space %) unmarked-spaces)
+         starting-marker (first markers)
+         spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker 0 depth-limit)]
+     (:space (max-by-score spaces-with-scores)))))
 
