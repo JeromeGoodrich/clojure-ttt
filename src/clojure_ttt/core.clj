@@ -37,16 +37,10 @@
 
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
-    (cond
-      (:help options) (exit 0 (usage summary))
-      (not= (count arguments) 1) (exit 1 (usage summary))
-      (= (:player1 options) (:player2 options)) (exit 1 "Markers cannot be the same.")
-       errors (exit 1 (error-msg errors)))
-    (if (some #(= (first arguments) %) ["me-first" "comp-first" "head-to-head"])
-      (let [players (player-config (first arguments) options)
+    (validate-cli options arguments summary errors)
+    (let [players (player-config (first arguments) options)
             board (board-config options)
             markers (create-markers options)]
-       (game-loop board players markers))
-      (exit 1 (usage summary)))))
+       (game-loop board players markers))))
 
 

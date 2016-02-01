@@ -69,6 +69,16 @@
        "  head-to-head   play against another human"]
     (clojure.string/join \newline)))
 
+(defn validate-cli [options arguments summary errors]
+  (cond
+    (:help options) (exit 0 (usage summary))
+    (not= (count arguments) 1) (exit 1 (usage summary))
+    (= (:player1 options) (:player2 options)) (exit 1 "Markers cannot be the same.")
+    errors (exit 1 (error-msg errors))
+    (not (some #(= (first arguments) %) ["me-first" "comp-first" "head-to-head"])) (exit 1 (usage summary))))
+
+
+
 (defn winner [players]
   (print (str "Game over! " (:marker (second players)) " wins!\n")))
 
