@@ -1,6 +1,7 @@
 (ns clojure-ttt.core-spec
   (:require [speclj.core :refer :all]
             [clojure-ttt.core :refer :all]
+            [clojure.ttt.config :refer :all]
             [clojure-ttt.ui :refer :all]))
 
 (describe "make-move"

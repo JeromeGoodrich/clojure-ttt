@@ -1,17 +1,43 @@
 (ns clojure-ttt.config
-  (:require [clojure-ttt.board :refer :all]))
+  (:require [clojure-ttt.board :refer :all]
+            [clojure-ttt.ui :refer :all]
+            [clojure-ttt.ai :refer :all]))
 
-(defn get-types [game-type]
+
+(defprotocol Player
+  (make-move [this board markers]))
+
+(deftype HumanPlayer [ ]
+  Player
+  (make-move [this board markers]
+    (let [move (human-make-move board markers)]
+      (mark-spot (first markers) move board))))
+
+(defn new-human-player [ ]
+  (HumanPlayer.))
+
+(deftype AIPlayer [difficulty]
+ Player
+ (make-move [this board markers]
+  (let [move (ai-make-move board markers difficulty)]
+    (mark-spot (first markers) move board))))
+
+(defn new-computer-player [difficulty]
+  (AIPlayer. difficulty))
+
+(defn player-config [game-type options]
+  (let [difficulty (:difficulty options)
+        human (new-human-player)
+        computer (new-computer-player difficulty)]
   (cond
-    (= game-type "me-first") ["human" "computer"]
-    (= game-type "comp-first") ["computer" "human"]
-    (= game-type "head-to-head") ["human" "human"]))
+    (= game-type "me-first") [human computer]
+    (= game-type "comp-first") [computer human]
+    (= game-type "head-to-head") [human human])))
 
-(defn game-config [game-type options]
-  (let [player-types (get-types game-type)
-        player1 {:marker (:player1 options)
-                 :type (first player-types)}
-        player2 {:marker (:player2 options)
-                 :type (second player-types)}
-        board (create-board (:board options))]
-    [player1 player2 board]))
+(defn create-markers [options]
+  (let [marker1 (:player1 options)
+        marker2 (:player2 options)]
+    [marker1 marker2]))
+
+(defn board-config [options]
+  (create-board (:board options)))

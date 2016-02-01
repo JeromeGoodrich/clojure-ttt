@@ -28,6 +28,10 @@
    ["-s" "--second MARKER" "Player2 marker"
     :id :player2
     :default "O"]
+   ["-d" "--difficulty LEVEL" "AI difficulty"
+    :default 3
+    :desc "1 = dumb AI, 3=  AI wins 85% of time, 8= unbeatable AI"
+    :parse-fn #(Integer. %)]
    ["-b"  "--board SIZE" "board size"
     :default 3
     :parse-fn #(Integer. %)]
