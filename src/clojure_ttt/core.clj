@@ -25,16 +25,6 @@
            (game-loop board (reverse players) (reverse markers)))))
 
 
-;(defn game-loop [board players]
-;      (print-board board)
-;      (cond
-;        (win-game? board) (winner players)
- ;       (tie-game? board) (tie)
-  ;      :else (let [marker (:marker(first players))
-   ;                 board (mark-spot marker spot board)]
-    ;            (game-loop board (reverse players)))))
-
-
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
     (validate-cli options arguments summary errors)
@@ -42,5 +32,3 @@
             board (board-config options)
             markers (create-markers options)]
        (game-loop board players markers))))
-
-

@@ -17,6 +17,44 @@
        (dorun))
   (print (str "----------------\n"))))
 
+
+
+;print size -1 rows "___|___|
+;on space where size = space in the row replace | with /n for all rows
+;___|___|___
+;___|___|___
+;on row where = size replace _ with ""
+
+(defn convert-row-to-board [row size]
+  (let [last-space (nth row (dec size))
+        other-spaces (pop row)]
+     (apply str
+      (apply str (map #(if (string? %) (str "_" % "_|") "___|") other-spaces))
+      (if (string? last-space) (str "_" last-space "_\n") "___\n"))))
+
+
+(defn convert-last-row-to-board [last-row size]
+  (let [last-space (nth last-row (dec size))
+        other-spaces (pop last-row)]
+    (apply str
+      (apply str (map #(if (string? %) (str " " % " |") "   |") other-spaces))
+      (if (string? last-space) (str " " last-space " \n") "   \n"))))
+
+
+(defn convert-board [board]
+  (let [size (int (Math/sqrt (count board)))
+        rows  (vec (partition size board))
+        last-row (vec (nth rows (dec size)))
+        other-rows (map #(vec %) (pop rows))
+        converted-other-rows (apply str (map #(convert-row-to-board % size) other-rows))
+        converted-last-row (convert-last-row-to-board last-row size)]
+    (apply str converted-other-rows converted-last-row)))
+
+(defn print-board2 [board]
+ (print (convert-board board)))
+
+
+
 (defn invalid-move []
   (println "Invalid move, please choose a valid space to move to"))
 

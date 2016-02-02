@@ -26,6 +26,13 @@
                  "----------------\n")
       (with-out-str (print-board ["X" 1 2 3 "O" 5 6 7 8]))))
 
+  (it "prints a pretty board"
+    (should= (str "___|_X_|___\n"
+                  "_X_|_O_|_O_\n"
+                  "   | X |   \n")
+             (with-out-str (print-board2 [0 "X" 2 "X" "O" "O" 6 "X" 8]))))
+
+
   (it "ignores invalid inputs from user and selects correct ones"
     (should= 3
       (with-in-str (make-input '("hello" 3))
