@@ -63,13 +63,12 @@
     (apply str converted-other-rows converted-last-row)))
 
 (defn row-to-string [row]
-  (map #(str %) row))
+  (apply str (map #(format "%-3s" %) row)))
 
 (defn ugly-board [board]
   (let [size (int (Math/sqrt  (count board)))
         rows (partition size board)]
-  (->> (map #(row-to-string %)rows)
-       (map #(clojure.string/join "  " %))
+  (->> (map #(row-to-string %) rows)
        (map println)
        (dorun))))
 

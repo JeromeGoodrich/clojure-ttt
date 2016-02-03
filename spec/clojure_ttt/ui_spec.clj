@@ -21,17 +21,17 @@
         (prompt "Please enter your name")))))
 
   (it "prints the board"
-   (should= (str  "X  1  2\n"
-                  "3  O  5\n"
-                  "6  7  8\n"
+   (should= (str  "X  1  2  \n"
+                  "3  O  5  \n"
+                  "6  7  8  \n"
                  "----------------\n")
       (with-out-str (display-board ["X" 1 2 3 "O" 5 6 7 8] ugly-board))))
 
   (it "prints the board"
-   (should= (str  "X  1  2  3\n"
-                  "O  5  6  7\n"
-                  "8  9  10  11\n"
-                 "12  13  14  15\n"
+   (should= (str  "X  1  2  3  \n"
+                  "O  5  6  7  \n"
+                  "8  9  10 11 \n"
+                 "12 13 14 15 \n"
                  "----------------\n")
       (with-out-str (display-board ["X" 1 2 3 "O" 5 6 7 8 9 10 11 12 13 14 15] ugly-board ))))
 

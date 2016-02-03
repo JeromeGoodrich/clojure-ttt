@@ -22,7 +22,7 @@
  (if (game-over? board)
    board
    (let [board (make-move (first players) board markers)]
-           (game-loop board (reverse players) (reverse markers board-type)))))
+           (game-loop board (reverse players) (reverse markers) board-type))))
 
 
 (defn -main [& args]
