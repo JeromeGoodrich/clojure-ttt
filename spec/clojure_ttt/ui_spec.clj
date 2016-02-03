@@ -1,6 +1,7 @@
 (ns clojure-ttt.ui-spec
   (require [speclj.core :refer :all]
-           [clojure-ttt.ui :refer :all]))
+           [clojure-ttt.ui :refer :all]
+           [clojure-ttt.config :refer :all]))
 
 (defn make-input [coll]
   (apply str (interleave coll (repeat "\n"))))
@@ -20,17 +21,34 @@
         (prompt "Please enter your name")))))
 
   (it "prints the board"
-   (should= (str  "X 1 2\n"
-                  "3 O 5\n"
-                  "6 7 8\n"
+   (should= (str  "X  1  2\n"
+                  "3  O  5\n"
+                  "6  7  8\n"
                  "----------------\n")
-      (with-out-str (print-board ["X" 1 2 3 "O" 5 6 7 8]))))
+      (with-out-str (display-board ["X" 1 2 3 "O" 5 6 7 8] ugly-board))))
+
+  (it "prints the board"
+   (should= (str  "X  1  2  3\n"
+                  "O  5  6  7\n"
+                  "8  9  10  11\n"
+                 "12  13  14  15\n"
+                 "----------------\n")
+      (with-out-str (display-board ["X" 1 2 3 "O" 5 6 7 8 9 10 11 12 13 14 15] ugly-board ))))
 
   (it "prints a pretty board"
     (should= (str "___|_X_|___\n"
                   "_X_|_O_|_O_\n"
-                  "   | X |   \n")
-             (with-out-str (print-board2 [0 "X" 2 "X" "O" "O" 6 "X" 8]))))
+                  "   | X |   \n"
+                  "----------------\n")
+             (with-out-str (display-board [0 "X" 2 "X" "O" "O" 6 "X" 8] pretty-board))))
+
+  (it "prints a pretty board"
+    (should= (str "___|_X_|___|___\n"
+                  "_X_|_O_|_O_|___\n"
+                  "___|___|___|___\n"
+                  "   | X |   |   \n"
+                  "----------------\n")
+             (with-out-str (display-board [0 "X" 2 3 "X" "O" "O" 7 8 9 10 11 12 "X" 14 15] pretty-board))))
 
 
   (it "ignores invalid inputs from user and selects correct ones"

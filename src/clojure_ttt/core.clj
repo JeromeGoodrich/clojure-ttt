@@ -17,12 +17,12 @@
 ;                          (make-move board players))
 ;        :else (Integer. space)))))
 
-(defn game-loop [board players markers]
- (print-board board)
+(defn game-loop [board players markers board-type]
+ (display-board board board-type)
  (if (game-over? board)
    board
    (let [board (make-move (first players) board markers)]
-           (game-loop board (reverse players) (reverse markers)))))
+           (game-loop board (reverse players) (reverse markers board-type)))))
 
 
 (defn -main [& args]
@@ -30,5 +30,6 @@
     (validate-cli options arguments summary errors)
     (let [players (player-config (first arguments) options)
             board (board-config options)
+            board-type (display-board-config options)
             markers (create-markers options)]
-       (game-loop board players markers))))
+       (game-loop board players markers board-type))))

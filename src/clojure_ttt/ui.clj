@@ -8,52 +8,8 @@
   (println message)
   (System/exit status))
 
-(defn print-board [board]
-  (let [size (int (Math/sqrt  (count board)))]
-  (->> (partition size board)
-       (map #(apply str %))
-       (map #(clojure.string/join " " %))
-       (map println)
-       (dorun))
-  (print (str "----------------\n"))))
-
-
-
-;print size -1 rows "___|___|
-;on space where size = space in the row replace | with /n for all rows
-;___|___|___
-;___|___|___
-;on row where = size replace _ with ""
-
-(defn convert-row-to-board [row size]
-  (let [last-space (nth row (dec size))
-        other-spaces (pop row)]
-     (apply str
-      (apply str (map #(if (string? %) (str "_" % "_|") "___|") other-spaces))
-      (if (string? last-space) (str "_" last-space "_\n") "___\n"))))
-
-
-(defn convert-last-row-to-board [last-row size]
-  (let [last-space (nth last-row (dec size))
-        other-spaces (pop last-row)]
-    (apply str
-      (apply str (map #(if (string? %) (str " " % " |") "   |") other-spaces))
-      (if (string? last-space) (str " " last-space " \n") "   \n"))))
-
-
-(defn convert-board [board]
-  (let [size (int (Math/sqrt (count board)))
-        rows  (vec (partition size board))
-        last-row (vec (nth rows (dec size)))
-        other-rows (map #(vec %) (pop rows))
-        converted-other-rows (apply str (map #(convert-row-to-board % size) other-rows))
-        converted-last-row (convert-last-row-to-board last-row size)]
-    (apply str converted-other-rows converted-last-row)))
-
-(defn print-board2 [board]
- (print (convert-board board)))
-
-
+(defn display-board [board board-type]
+   (print (str (board-type board) "----------------\n")))
 
 (defn invalid-move []
   (println "Invalid move, please choose a valid space to move to"))
@@ -73,7 +29,13 @@
    ["-b"  "--board SIZE" "board size"
     :default 3
     :parse-fn #(Integer. %)]
-   ["-h"  "--help"]])
+   ["-h"  "--help"]
+   ["-t" "--board-type TYPE" "Board Type"
+    :default 1
+    :parse-fn #(Integer. %)
+    :desc "1 is the pretty board. 2 is a more intutive, but uglier board.
+          To mark the upper left space on the pretty board hit 0.
+          Numbers increase as you move right across the board"]])
 
 (defn choose-space [players]
   (let [current-player (:marker (first players))]
@@ -114,8 +76,6 @@
     (= (:player1 options) (:player2 options)) (exit 1 "Markers cannot be the same.")
     errors (exit 1 (error-msg errors))
     (not (some #(= (first arguments) %) ["me-first" "comp-first" "head-to-head"])) (exit 1 (usage summary))))
-
-
 
 (defn winner [players]
   (print (str "Game over! " (:marker (second players)) " wins!\n")))
