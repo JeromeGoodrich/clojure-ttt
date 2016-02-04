@@ -1,20 +1,41 @@
 (ns clojure-ttt.config_spec
  (:require [speclj.core :refer :all]
            [clojure-ttt.config :refer :all]
-           [clojure-ttt.ui :refer :all]))
+           [clojure-ttt.ui :refer :all])
+  (:import [clojure_ttt.config HumanPlayer]
+           [clojure_ttt.config AIPlayer]))
 
 (describe "player-config"
 
   (it "created players are instances of Player"
     (let [io (new-console-io)]
-      (should-be (map #(instance? Player %)) (player-config "me-first" {:difficulty 3} io pretty-board)))))
+      (should-be (map #(instance? Player %)) (player-config "me-first" {:difficulty 3} io pretty-board))))
 
- ; (context "me-first game"
-  ;  (it "human player is in the first position"
-   ; (pending "need to find better way to test")
-    ;  (let [io (new-console-io)]
-     ;   (should-be (= #(type %) clojure-ttt.config.HumanPlayer)
-      ;           (type (first (player-config "me-first" {:diffeculty 3} io pretty-board))))))))
+  (context "me-first game"
+    (it "human player is in the first position"
+      (let [io (new-console-io)]
+        (should-be #(isa? HumanPlayer %)
+                   (type (first (player-config "me-first" {:difficulty 3} io pretty-board))))))
+    (it "computer player is in the second position"
+      (let [io (new-console-io)]
+        (should-be #(isa? AIPlayer %)
+                   (type (second (player-config "me-first" {:difficulty 3} io pretty-board)))))))
+
+  (context "comp-first game"
+    (it "computer player is in the first position"
+      (let [io (new-console-io)]
+        (should-be #(isa? AIPlayer %)
+                   (type (first (player-config "comp-first" {:difficulty 3} io pretty-board))))))
+    (it "human player is in the second position"
+      (let [io (new-console-io)]
+        (should-be #(isa? HumanPlayer %)
+                   (type (second (player-config "comp-first" {:difficulty 3} io pretty-board)))))))
+
+  (context "head-to-head game"
+    (it "there are human players in both positions"
+      (let [io (new-console-io)]
+        (should= [true true]
+                   (map #(= (type %) HumanPlayer) (player-config "head-to-head" {:difficulty 3} io pretty-board)))))))
 
 (describe "create-marker"
   (it "creates markers for the game"

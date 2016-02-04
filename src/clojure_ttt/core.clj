@@ -7,6 +7,13 @@
             [clojure-ttt.cli :refer :all]))
 
 
+(defn end-result [markers board]
+; Presenter object depends on IO as does Player
+  ; roll Player protocol into Player namespace
+  ; human-make move and ai make-move in their own namespaces
+
+
+
 (defn game-loop [board players markers]
  (if (game-over? board)
    board
