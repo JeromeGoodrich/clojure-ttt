@@ -3,7 +3,8 @@
             [clojure-ttt.board :refer :all]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure-ttt.ai :refer :all]
-            [clojure-ttt.config :refer :all]))
+            [clojure-ttt.config :refer :all]
+            [clojure-ttt.cli :refer :all]))
 
 ;(defn make-move [board players]
 ;  (if (= (:type (first players)) "computer")
@@ -17,6 +18,7 @@
 ;                          (make-move board players))
 ;        :else (Integer. space)))))
 
+
 (defn game-loop [board players markers board-type]
  (display-board board board-type)
  (if (game-over? board)
@@ -24,12 +26,12 @@
    (let [board (make-move (first players) board markers)]
            (game-loop board (reverse players) (reverse markers) board-type))))
 
-
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
     (validate-cli options arguments summary errors)
-    (let [players (player-config (first arguments) options)
-            board (board-config options)
-            board-type (display-board-config options)
-            markers (create-markers options)]
-       (game-loop board players markers board-type))))
+    (let [io (new-console-io)
+          players (player-config (first arguments) options io)
+          board (board-config options)
+          board-type (config-board-display options)
+          markers (create-markers options)]
+      (game-loop board players markers board-type))))

@@ -3,18 +3,17 @@
             [clojure-ttt.ui :refer :all]
             [clojure-ttt.ai :refer :all]))
 
-
 (defprotocol Player
   (make-move [this board markers]))
 
-(deftype HumanPlayer [ ]
+(deftype HumanPlayer [io]
   Player
   (make-move [this board markers]
-    (let [move (human-make-move board markers)]
+    (let [move (human-make-move board markers io)]
       (mark-spot (first markers) move board))))
 
-(defn new-human-player [ ]
-  (HumanPlayer.))
+(defn new-human-player [io]
+  (HumanPlayer. io))
 
 (deftype AIPlayer [difficulty]
  Player
@@ -25,9 +24,9 @@
 (defn new-computer-player [difficulty]
   (AIPlayer. difficulty))
 
-(defn player-config [game-type options]
+(defn player-config [game-type options io]
   (let [difficulty (:difficulty options)
-        human (new-human-player)
+        human (new-human-player io)
         computer (new-computer-player difficulty)]
   (cond
     (= game-type "me-first") [human computer]
@@ -39,31 +38,14 @@
         marker2 (:player2 options)]
     [marker1 marker2]))
 
-(defn convert-row-to-board [row size]
-  (let [last-space (nth row (dec size))
-        other-spaces (pop row)]
-     (apply str
-      (apply str (map #(if (string? %) (str "_" % "_|") "___|") other-spaces))
-      (if (string? last-space) (str "_" last-space "_\n") "___\n"))))
-
-(defn convert-last-row-to-board [last-row size]
-  (let [last-space (nth last-row (dec size))
-        other-spaces (pop last-row)]
-    (apply str
-      (apply str (map #(if (string? %) (str " " % " |") "   |") other-spaces))
-      (if (string? last-space) (str " " last-space " \n") "   \n"))))
-
 (defn pretty-board [board]
   (let [size (int (Math/sqrt (count board)))
         rows  (vec (partition size board))
         last-row (vec (nth rows (dec size)))
         other-rows (map #(vec %) (pop rows))
-        converted-other-rows (apply str (map #(convert-row-to-board % size) other-rows))
-        converted-last-row (convert-last-row-to-board last-row size)]
+        converted-other-rows (apply str (map #(pretty-row-to-string % size) other-rows))
+        converted-last-row (pretty-last-row-to-string last-row size)]
     (apply str converted-other-rows converted-last-row)))
-
-(defn row-to-string [row]
-  (apply str (map #(format "%-3s" %) row)))
 
 (defn ugly-board [board]
   (let [size (int (Math/sqrt  (count board)))
@@ -72,7 +54,7 @@
        (map println)
        (dorun))))
 
-(defn display-board-config [options]
+(defn config-board-display [options]
   (if (= 1 (:board-type options)) pretty-board ugly-board))
 
 (defn board-config [options]

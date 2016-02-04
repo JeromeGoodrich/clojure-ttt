@@ -41,3 +41,20 @@
 
 (defn game-over? [board]
   (some #(% board) [horizontal-winner? vertical-winner? diagonal-winner? tie-game?]))
+
+(defn pretty-row-to-string [row size]
+  (let [last-space (nth row (dec size))
+        other-spaces (pop row)]
+     (apply str
+      (apply str (map #(if (string? %) (str "_" % "_|") "___|") other-spaces))
+      (if (string? last-space) (str "_" last-space "_\n") "___\n"))))
+
+(defn row-to-string [row]
+  (apply str (map #(format "%-3s" %) row)))
+
+(defn pretty-last-row-to-string [last-row size]
+  (let [last-space (nth last-row (dec size))
+        other-spaces (pop last-row)]
+    (apply str
+      (apply str (map #(if (string? %) (str " " % " |") "   |") other-spaces))
+      (if (string? last-space) (str " " last-space " \n") "   \n"))))
