@@ -2,20 +2,18 @@
   (:require [speclj.core :refer :all]
             [clojure-ttt.core :refer :all]
             [clojure-ttt.config :refer :all]
-            [clojure-ttt.ui :refer :all]))
+            [clojure-ttt.ui :refer :all]
+            [clojure-ttt.ai :refer :all]))
 
-(describe "make-move"
-  (it "selects a spot on the board to move to"
-    (should= 5
-      (with-in-str "5"
-        (make-move ["X" "O" "X" 3 "X" 5 "O" 7 "O"]
-                   [{:type "human" :marker "X"}
-                    {:type "computer" :marker "O"}]))))
+(describe "game-loop"
+  (it "plays through the last move of the game and returns the board"
+    (let [io (new-console-io)
+          human (new-human-player io pretty-board)
+          ai (new-computer-player 3)]
+    (should= ["X" "O" "X" "O" "O" "X" "O" "X" "X"] (game-loop ["X" "O" "X" "O" "O" "X" "O" "X" 8]
+                                                              [ai human]
+                                                              ["X" "O"])))))
 
-  (it "computer move"
-    (should= 5
-      (make-move ["X" 2 "O" 3 "X" 5 "X" 7 "O"]
-                   [{:type "computer" :marker "O"}
-                    {:type "human" :marker "X"}]))))
+
 
 
