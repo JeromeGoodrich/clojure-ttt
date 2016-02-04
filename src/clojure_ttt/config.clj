@@ -6,14 +6,14 @@
 (defprotocol Player
   (make-move [this board markers]))
 
-(deftype HumanPlayer [io]
+(deftype HumanPlayer [io board-display]
   Player
   (make-move [this board markers]
-    (let [move (human-make-move board markers io)]
+    (let [move (human-make-move board markers io board-display)]
       (mark-spot (first markers) move board))))
 
-(defn new-human-player [io]
-  (HumanPlayer. io))
+(defn new-human-player [io board-display]
+  (HumanPlayer. io board-display))
 
 (deftype AIPlayer [difficulty]
  Player
@@ -24,9 +24,9 @@
 (defn new-computer-player [difficulty]
   (AIPlayer. difficulty))
 
-(defn player-config [game-type options io]
+(defn player-config [game-type options io board-display]
   (let [difficulty (:difficulty options)
-        human (new-human-player io)
+        human (new-human-player io board-display)
         computer (new-computer-player difficulty)]
   (cond
     (= game-type "me-first") [human computer]
