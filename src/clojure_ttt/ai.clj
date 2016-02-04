@@ -34,22 +34,6 @@
                   (not (= current-marker starting-marker)) (max-by-score spaces-with-scores)
                   (= current-marker starting-marker) (min-by-score spaces-with-scores))))))
 
-;(defn find-space-score [space board markers starting-marker]
-;    (let [current-marker (first markers)]
-;     (cond
-;        (and (win-game? board)
-;             (= current-marker starting-marker)) (conj space {:score  10})
-;        (and (win-game? board)
-;             (not (= current-marker starting-marker))) (conj space {:score -10})
-;        (tie-game? board) (conj space {:score 0})
-;        :else (let [new-markers (reverse markers)
-;                    unmarked-spaces (find-unmarked-spaces board)
-;                    boards (create-possible-boards board unmarked-spaces new-markers)
-;                    spaces-with-scores (map #(find-space-score space % new-markers starting-marker) boards)]
-;                (if (not (= current-marker starting-marker))
-;                  (max-by-score spaces-with-scores)
-;                  (min-by-score spaces-with-scores))))))
-
 (defn get-spaces-with-scores [spaces boards markers starting-marker depth depth-limit]
   (map #(find-space-score %1  %2 markers starting-marker depth depth-limit) spaces boards))
 
