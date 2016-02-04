@@ -1,5 +1,5 @@
 (ns clojure-ttt.ai
-  (:require [clojure-ttt.ui :refer :all]
+  (:require [clojure-ttt.io :refer :all]
             [clojure-ttt.board :refer :all]
             [clojure.tools.cli :refer :all]))
 

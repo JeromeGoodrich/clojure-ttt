@@ -1,6 +1,6 @@
-(ns clojure-ttt.ui-spec
+(ns clojure-ttt.io-spec
   (require [speclj.core :refer :all]
-           [clojure-ttt.ui :refer :all]
+           [clojure-ttt.io :refer :all]
            [clojure-ttt.config :refer :all]))
 
 (deftype TestIO [input]

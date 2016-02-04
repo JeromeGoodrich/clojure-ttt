@@ -1,28 +1,9 @@
 (ns clojure-ttt.config
   (:require [clojure-ttt.board :refer :all]
-            [clojure-ttt.ui :refer :all]
+            [clojure-ttt.io :refer :all]
+            [clojure-ttt.player :refer :all]
             [clojure-ttt.ai :refer :all]))
 
-(defprotocol Player
-  (make-move [this board markers]))
-
-(deftype HumanPlayer [io board-display]
-  Player
-  (make-move [this board markers]
-    (let [move (human-make-move board markers io board-display)]
-      (mark-spot (first markers) move board))))
-
-(defn new-human-player [io board-display]
-  (HumanPlayer. io board-display))
-
-(deftype AIPlayer [difficulty]
- Player
- (make-move [this board markers]
-  (let [move (ai-make-move board markers difficulty)]
-    (mark-spot (first markers) move board))))
-
-(defn new-computer-player [difficulty]
-  (AIPlayer. difficulty))
 
 (defn player-config [game-type options io board-display]
   (let [difficulty (:difficulty options)
@@ -31,7 +12,8 @@
   (cond
     (= game-type "me-first") [human computer]
     (= game-type "comp-first") [computer human]
-    (= game-type "head-to-head") [human human])))
+    (= game-type "head-to-head") [human human]
+    (= game-type "spectator") [computer computer])))
 
 (defn create-markers [options]
   (let [marker1 (:player1 options)

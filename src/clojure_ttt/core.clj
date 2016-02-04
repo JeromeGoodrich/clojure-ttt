@@ -1,17 +1,20 @@
 (ns clojure-ttt.core
-  (:require [clojure-ttt.ui :refer :all]
+  (:require [clojure-ttt.io :refer :all]
             [clojure-ttt.board :refer :all]
+            [clojure-ttt.player :refer :all]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure-ttt.ai :refer :all]
             [clojure-ttt.config :refer :all]
             [clojure-ttt.cli :refer :all]))
 
 
-(defn end-result [markers board]
 ; Presenter object depends on IO as does Player
   ; roll Player protocol into Player namespace
   ; human-make move and ai make-move in their own namespaces
-
+(defn end-result [board markers]
+ (display-board board board-type)
+  (if (win-game? board)
+    (prompt io "Game over! " (second markers) " wins!\n Play again? (y/n)")
+    (prompt io "Game over! It's a tie!\n Play again? (y/n)")))
 
 
 (defn game-loop [board players markers]

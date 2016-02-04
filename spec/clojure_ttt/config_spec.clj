@@ -35,7 +35,13 @@
     (it "there are human players in both positions"
       (let [io (new-console-io)]
         (should= [true true]
-                   (map #(= (type %) HumanPlayer) (player-config "head-to-head" {:difficulty 3} io pretty-board)))))))
+                   (map #(= (type %) HumanPlayer) (player-config "head-to-head" {:difficulty 3} io pretty-board))))))
+
+  (context "spectator game"
+    (it "there are computer players in both positions"
+      (let [io (new-console-io)]
+        (should= [true true]
+                   (map #(= (type %) AIPlayer) (player-config "spectator" {:difficulty 3} io pretty-board)))))))
 
 (describe "create-marker"
   (it "creates markers for the game"

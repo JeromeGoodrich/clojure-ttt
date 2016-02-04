@@ -39,7 +39,8 @@
        "Actions:"
        "  me-first       play first against computer"
        "  comp-first     play second against the computer"
-       "  head-to-head   play against another human"]
+       "  head-to-head   play against another human"
+       "  spectator      watch two computer players play"]
     (clojure.string/join \newline)))
 
 (defn error-msg [errors]
@@ -56,4 +57,4 @@
     (not= (count arguments) 1) (exit 1 (usage summary))
     (= (:player1 options) (:player2 options)) (exit 1 "Markers cannot be the same.")
     errors (exit 1 (error-msg errors))
-    (not (some #(= (first arguments) %) ["me-first" "comp-first" "head-to-head"])) (exit 1 (usage summary))))
+    (not (some #(= (first arguments) %) ["me-first" "comp-first" "head-to-head" "spectator"])) (exit 1 (usage summary))))
