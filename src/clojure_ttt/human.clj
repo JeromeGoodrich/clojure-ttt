@@ -1,5 +1,5 @@
 (ns clojure-ttt.human
-  (:require [clojure-ttt.io :refer :all]))
+  (:require [clojure-ttt.presenter :refer :all]))
 
 (defn choose-space [markers io]
   (let [current-marker (first markers)]
@@ -11,13 +11,12 @@
      (validate-move io board (prompt io "Invalid move, please choose a valid space to move to"))
      (Integer. move))))
 
-(defn human-make-move [board markers io board-display]
-  (display-board board io board-display)
+(defn human-make-move [board markers io]
   (let [move (choose-space markers io)]
   (try (validate-move io board move)
     (catch Exception e (do
                          (print (str (.getMessage e) " That's not a number. Let's try that again!\n"))
-                         (human-make-move board markers io board-display))))))
+                         (human-make-move board markers io))))))
 
 
 

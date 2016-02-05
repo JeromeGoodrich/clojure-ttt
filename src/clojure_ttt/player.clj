@@ -6,14 +6,14 @@
 (defprotocol Player
   (make-move [this board markers]))
 
-(deftype HumanPlayer [io board-display]
+(deftype HumanPlayer [io]
   Player
   (make-move [this board markers]
-    (let [move (human-make-move board markers io board-display)]
+    (let [move (human-make-move board markers io)]
       (mark-spot (first markers) move board))))
 
-(defn new-human-player [io board-display]
-  (HumanPlayer. io board-display))
+(defn new-human-player [io]
+  (HumanPlayer. io))
 
 (deftype AIPlayer [difficulty]
  Player

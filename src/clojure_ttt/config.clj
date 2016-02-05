@@ -1,13 +1,13 @@
 (ns clojure-ttt.config
   (:require [clojure-ttt.board :refer :all]
-            [clojure-ttt.io :refer :all]
+            [clojure-ttt.presenter :refer :all]
             [clojure-ttt.player :refer :all]
             [clojure-ttt.ai :refer :all]))
 
 
-(defn player-config [game-type options io board-display]
+(defn player-config [game-type options io]
   (let [difficulty (:difficulty options)
-        human (new-human-player io board-display)
+        human (new-human-player io)
         computer (new-computer-player difficulty)]
   (cond
     (= game-type "me-first") [human computer]
@@ -36,8 +36,10 @@
        (map println)
        (dorun))))
 
-(defn config-board-display [options]
-  (if (= 1 (:board-type options)) pretty-board ugly-board))
+(defn parse-board-display [options]
+  (if (= (:board options) 1)
+    pretty-board
+    ugly-board))
 
 (defn board-config [options]
   (create-board (:board options)))

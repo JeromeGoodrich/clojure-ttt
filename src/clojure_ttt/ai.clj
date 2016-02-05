@@ -1,6 +1,5 @@
 (ns clojure-ttt.ai
-  (:require [clojure-ttt.io :refer :all]
-            [clojure-ttt.board :refer :all]
+  (:require [clojure-ttt.board :refer :all]
             [clojure.tools.cli :refer :all]))
 
 (defn find-unmarked-spaces [board]
