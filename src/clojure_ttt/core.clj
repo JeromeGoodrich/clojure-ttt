@@ -7,14 +7,10 @@
             [clojure-ttt.cli :refer :all]))
 
 
-(defn evaluate-end-game [board]
-  (if (win-game? board)
+(defn evaluate-end-game [game]
+  (if (win-game? game)
     "win"
     "tie"))
-
-(defn end-game [board markers io]
- (->> (evaluate-end-game board)
-      (display-end-result io markers board)))
 
 (defn game-loop [board players markers io]
  (display-board io board)
@@ -22,6 +18,14 @@
    board
    (let [board (make-move (first players) board markers)]
            (game-loop board (reverse players) (reverse markers) io))))
+
+(defn end-game [game board markers io players]
+  (let [result (evaluate-end-game game)
+        response (display-end-result io result markers)
+        new-game (game-loop board players markers io)]
+    (if (= response  "y")
+      (end-game new-game board markers io players)
+      (println "See you next time!"))))
 
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
@@ -31,5 +35,12 @@
           board (board-config options)
           markers (create-markers options)]
      (end-game (game-loop board players markers io)
+               board
                markers
-               io))))
+               io
+               players))))
+
+
+  ; evaluate end-game and ask user to play again
+   ; capture response
+   ; if yes, get initial conditions and restart game-loop

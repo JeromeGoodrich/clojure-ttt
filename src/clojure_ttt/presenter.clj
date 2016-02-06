@@ -1,7 +1,7 @@
 (ns clojure-ttt.presenter)
 
 (defprotocol Presenter
-  (display-end-result [this markers board result])
+  (display-end-result [this result markers])
   (get-input [this])
   (display-board [this board])
   (prompt [this something]))
@@ -13,12 +13,12 @@
   (prompt [this something]
     (println something)
     (read-line))
-  (display-end-result [this markers board result]
-   (do
+  (display-end-result [this result markers]
      (if (= "win" result)
-      (println "Game over! " (second markers) " wins!\n Play again? (y/n)")
-      (println "Game over! It's a tie!\n Play again? (y/n)")))
-    (read-line))
+      (do (println "Game over! " (first markers) " wins!\n Play again? (y/n)")
+          (read-line))
+      (do (println "Game over! It's a tie!\n Play again? (y/n)")
+          (read-line))))
   (display-board [this board]
     (println (str "\n"(display-options board)))))
 
