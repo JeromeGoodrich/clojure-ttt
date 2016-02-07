@@ -15,10 +15,9 @@
     (read-line))
   (display-end-result [this result markers]
      (if (= "win" result)
-      (do (println "Game over! " (first markers) " wins!\n Play again? (y/n)")
-          (read-line))
-      (do (println "Game over! It's a tie!\n Play again? (y/n)")
-          (read-line))))
+      (println "Game over! " (second markers) " wins!\n Play again? (y/n)")
+      (println "Game over! It's a tie!\n Play again? (y/n)")))
+
   (display-board [this board]
     (println (str "\n"(display-options board)))))
 

@@ -12,20 +12,21 @@
     "win"
     "tie"))
 
-(defn game-loop [board players markers io]
- (display-board io board)
- (if (game-over? board)
-   board
-   (let [board (make-move (first players) board markers)]
+(defn ame-loop [board players markers io]
+  (display-board io board)
+  ( (game-over? board)
+    (do
+      (display-end-result io (evaluate-end-game board) markers)
+      board)
+    (let [board (make-move (first players) board markers)]
            (game-loop board (reverse players) (reverse markers) io))))
 
 (defn end-game [game board markers io players]
-  (let [result (evaluate-end-game game)
-        response (display-end-result io result markers)
-        new-game (game-loop board players markers io)]
-    (if (= response  "y")
-      (end-game new-game board markers io players)
-      (println "See you next time!"))))
+  (let  [response (get-input io)]
+      (if (not= response  "y")
+        (println "See you next time!")
+        (let [new-game (game-loop board players markers io)]
+        (end-game new-game board markers io players)))))
 
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]

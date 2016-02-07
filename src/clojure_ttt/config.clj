@@ -37,7 +37,7 @@
        (dorun))))
 
 (defn parse-board-display [options]
-  (if (= (:board options) 1)
+  (if (= (:board-type options) 1)
     pretty-board
     ugly-board))
 
