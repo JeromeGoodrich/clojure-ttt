@@ -1,6 +1,7 @@
 (ns clojure-ttt.presenter)
 
 (defprotocol Presenter
+  (print-io [this something])
   (display-end-result [this result markers])
   (get-input [this])
   (display-board [this board])
@@ -8,6 +9,8 @@
 
 (deftype Console [display-options]
   Presenter
+  (print-io [this something]
+    (println something))
   (get-input [this]
     (read-line))
   (prompt [this something]
@@ -17,11 +20,24 @@
      (if (= "win" result)
       (println "Game over! " (second markers) " wins!\n Play again? (y/n)")
       (println "Game over! It's a tie!\n Play again? (y/n)")))
-
   (display-board [this board]
     (println (str "\n"(display-options board)))))
+
+(deftype TestConsole [input display-options]
+  Presenter
+  (get-input [this]
+    input)
+  (print-io [this something]
+    (println something))
+  (prompt [this something]
+    (println something)
+    input)
+  (display-board [this board]
+    (println (str "/n"(display-options board)))))
 
 (defn new-console [display-options]
   (Console. display-options))
 
+ (defn new-test-console [input display-options]
+  (TestConsole. input display-options))
 
