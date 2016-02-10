@@ -31,7 +31,6 @@
       (should= true (horizontal-winner? ["X" "X" "X" "X" 4 "O" 6 7 8 9 "O" 11 "O" 13 14 15]))
       (should= nil (horizontal-winner? ["X" 1 "X" "O" 4 "O" 6 7 8 9 10 11 12 13 14 15])))))
 
-
 (describe "winning vertically"
   (context "3x3 board"
     (it "declares a winner the correct number of adjacent vertical markers"
@@ -65,7 +64,6 @@
       (should= true (tie-game? ["X" "O" "X" "O" "O" "X" "X" "X" "O" "X" "O" "X" "O" "X" "O" "X"]))
       (should= false (tie-game? ["X" 1 2 "X" 4 5 "X" 7 8 9 10 11 12 13 14 15])))))
 
-
 (describe "game over"
   (context "3x3 board"
     (it "declares the end of the game"
@@ -83,8 +81,3 @@
       (should= true (game-over? ["X" 1 2 3 4 "X" 6 7 8 9 "X" 11 12 13 14 "X"]))
       (should= true (game-over? ["X" "O" "X" "O" "O" "X" "X" "X" "O" "X" "O" "X" "O" "X" "O" "X"]))
       (should= nil (game-over? [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15])))))
-
-
-
-
-

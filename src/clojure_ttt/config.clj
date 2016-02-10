@@ -4,7 +4,6 @@
             [clojure-ttt.player :refer :all]
             [clojure-ttt.ai :refer :all]))
 
-
 (defn player-config [game-type options io]
   (let [difficulty (:difficulty options)
         human (new-human-player io)

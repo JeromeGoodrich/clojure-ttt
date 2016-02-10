@@ -17,6 +17,3 @@
     (catch Exception e (do
                          (print-io io (str (.getMessage e) " That's not a number. Let's try that again!\n"))
                          (human-make-move board markers io))))))
-
-
-

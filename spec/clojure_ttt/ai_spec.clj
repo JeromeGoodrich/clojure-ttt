@@ -28,17 +28,6 @@
        losing (count (filter false? (flatten (gen-all-boards))))]
         (float (/ losing total))))
 
-(defn mock-game-loop [board markers]
-  (cond
-    (win-game? board) false
-    (tie-game? board) true
-    :else (let [marker (first markers)
-                spot (ai-make-move board markers)
-                board (mark-spot marker spot board)]
-             (mock-game-loop board (reverse markers)))))
-
-
-
 
 (describe "ai-performance"
 
@@ -102,4 +91,3 @@
     (should= 8 (ai-make-move [0 1 2
                               3 4 5
                               6 7 8] ["X" "O"] 8))))
-

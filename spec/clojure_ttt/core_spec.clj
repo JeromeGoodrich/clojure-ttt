@@ -6,7 +6,7 @@
             [clojure-ttt.ai :refer :all]
             [clojure-ttt.player :refer :all]
             [clojure-ttt.board :refer :all]
-            [clojure-ttt.helper-spec :refer :all]
+            [clojure-ttt.spec-helper :refer :all]
             [clojure-ttt.cli :refer :all]))
 
 (def game-loops (atom 0))
@@ -27,7 +27,7 @@
 
 (describe "game-loop"
   (it "plays through the last 2 moves of a game and returns the board"
-    (let [io (new-test-console "6")
+    (let [io (new-test-console ["6"])
           human (new-human-player io)
           computer (new-computer-player 3)]
     (should= ["X" "O" "X" "O" "X" "O" "X" 7 "O"]
@@ -42,7 +42,7 @@
     (let [game ["X" "O" "X" "O" "X" "O" "X" 7 "O"]
           board [0 1 2 3 4 5 6 7 8]
           markers ["X" "O"]
-          io (new-test-console "n")
+          io (new-test-console ["n"])
           players [(new-human-player io) (new-computer-player 3)]]
       (should= 0 (restart-game-maybe game board markers io players)))))
 
@@ -55,5 +55,4 @@
           io (new-test-console ["y" "n"])
           players [(new-human-player io) (new-computer-player 3)]
           restart-game (restart-game-maybe game board markers io players)]
-      (should= 1 game-loops)))))
-
+      (should= 1 @game-loops)))))

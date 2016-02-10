@@ -1,8 +1,7 @@
 (ns clojure-ttt.cli-spec
- (require [speclj.core :refer :all]
-          [clojure-ttt.cli :refer :all]
-          [clojure-ttt.helper-spec :refer :all]))
-
+ (:require [speclj.core :refer :all]
+           [clojure-ttt.cli :refer :all]
+           [clojure-ttt.spec-helper :refer :all]))
 
 (describe "validate cli"
   (context "user asks for help"
@@ -34,12 +33,3 @@
     (it "exits with a status of 1"
       (with-redefs [exit  mock-exit]
        (should= 1 (validate-cli nil ["me-too"] nil nil))))))
-
-
-
-
-
-
-
-
-

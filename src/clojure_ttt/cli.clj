@@ -1,6 +1,5 @@
 (ns clojure-ttt.cli)
 
-
 (def cli-options
   [["-f" "--first MARKER" "Player1 marker"
     :id :player1

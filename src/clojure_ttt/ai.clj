@@ -45,4 +45,3 @@
          starting-marker (first markers)
          spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker 0 depth-limit)]
      (:space (max-by-score spaces-with-scores)))))
-
