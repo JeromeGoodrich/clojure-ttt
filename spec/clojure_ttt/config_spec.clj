@@ -1,47 +1,44 @@
 (ns clojure-ttt.config_spec
  (:require [speclj.core :refer :all]
            [clojure-ttt.config :refer :all]
-           [clojure-ttt.ui :refer :all])
-  (:import [clojure_ttt.config HumanPlayer]
-           [clojure_ttt.config AIPlayer]))
+           [clojure-ttt.presenter :refer :all])
+  (:import
+           [clojure_ttt.player HumanPlayer]
+           [clojure_ttt.player AIPlayer]))
 
 (describe "player-config"
 
-  (it "created players are instances of Player"
-    (let [io (new-console-io)]
-      (should-be (map #(instance? Player %)) (player-config "me-first" {:difficulty 3} io pretty-board))))
-
   (context "me-first game"
     (it "human player is in the first position"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should-be #(isa? HumanPlayer %)
-                   (type (first (player-config "me-first" {:difficulty 3} io pretty-board))))))
+                   (type (first (player-config "me-first" {:difficulty 3} io))))))
     (it "computer player is in the second position"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should-be #(isa? AIPlayer %)
-                   (type (second (player-config "me-first" {:difficulty 3} io pretty-board)))))))
+                   (type (second (player-config "me-first" {:difficulty 3} io)))))))
 
   (context "comp-first game"
     (it "computer player is in the first position"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should-be #(isa? AIPlayer %)
-                   (type (first (player-config "comp-first" {:difficulty 3} io pretty-board))))))
+                   (type (first (player-config "comp-first" {:difficulty 3} io))))))
     (it "human player is in the second position"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should-be #(isa? HumanPlayer %)
-                   (type (second (player-config "comp-first" {:difficulty 3} io pretty-board)))))))
+                   (type (second (player-config "comp-first" {:difficulty 3} io)))))))
 
   (context "head-to-head game"
     (it "there are human players in both positions"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should= [true true]
-                   (map #(= (type %) HumanPlayer) (player-config "head-to-head" {:difficulty 3} io pretty-board))))))
+                   (map #(= (type %) HumanPlayer) (player-config "head-to-head" {:difficulty 3} io))))))
 
   (context "spectator game"
     (it "there are computer players in both positions"
-      (let [io (new-console-io)]
+      (let [io (new-console nil)]
         (should= [true true]
-                   (map #(= (type %) AIPlayer) (player-config "spectator" {:difficulty 3} io pretty-board)))))))
+                   (map #(= (type %) AIPlayer) (player-config "spectator" {:difficulty 3} io)))))))
 
 (describe "create-marker"
   (it "creates markers for the game"
@@ -63,13 +60,13 @@
 
 (describe "config-board-display"
   (it "returns pretty board if :board-type is 1"
-    (should= pretty-board (config-board-display {:board-type 1})))
+    (should= pretty-board (parse-board-display {:board-type 1})))
 
   (it "returns ugly-board if board-type is 2"
-    (should= ugly-board (config-board-display {:board-type 2})))
+    (should= ugly-board (parse-board-display {:board-type 2})))
 
   (it "returns an ugly board with any input other than 1 or 2"
-    (should= ugly-board (config-board-display {:board-type "F"}))))
+    (should= ugly-board (parse-board-display {:board-type "F"}))))
 
 (describe "board-config"
   (it "creates a board given a size"

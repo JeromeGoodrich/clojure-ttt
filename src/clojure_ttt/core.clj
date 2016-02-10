@@ -6,7 +6,6 @@
             [clojure-ttt.config :refer :all]
             [clojure-ttt.cli :refer :all]))
 
-
 (defn eval-end-game [game]
   (if (win-game? game)
     "win"
@@ -21,12 +20,12 @@
     (let [board (make-move (first players) board markers)]
            (game-loop board (reverse players) (reverse markers) io))))
 
-(defn restart-game [game board markers io players]
+(defn restart-game-maybe [game board markers io players]
   (let  [response (get-input io)]
       (if (not= response  "y")
-        (print-io io "See you next time!")
+        (exit 0 "See you next time!")
         (let [new-game (game-loop board players markers io)]
-          (restart-game new-game board markers io players)))))
+          (restart-game-maybe new-game board markers io players)))))
 
 (defn -main [& args]
   (let [{:keys [options arguments summary errors]} (parse-opts args cli-options)]
@@ -35,7 +34,7 @@
           players (player-config (first arguments) options io)
           board (board-config options)
           markers (create-markers options)]
-     (restart-game (game-loop board players markers io)
+     (restart-game-maybe (game-loop board players markers io)
                board
                markers
                io

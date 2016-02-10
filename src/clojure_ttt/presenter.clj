@@ -23,21 +23,5 @@
   (display-board [this board]
     (println (str "\n"(display-options board)))))
 
-(deftype TestConsole [input display-options]
-  Presenter
-  (get-input [this]
-    input)
-  (print-io [this something]
-    (println something))
-  (prompt [this something]
-    (println something)
-    input)
-  (display-board [this board]
-    (println (str "/n"(display-options board)))))
-
 (defn new-console [display-options]
   (Console. display-options))
-
- (defn new-test-console [input display-options]
-  (TestConsole. input display-options))
-

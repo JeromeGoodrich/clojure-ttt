@@ -1,9 +1,8 @@
 (ns clojure-ttt.cli-spec
  (require [speclj.core :refer :all]
-          [clojure-ttt.cli :refer :all]))
+          [clojure-ttt.cli :refer :all]
+          [clojure-ttt.helper-spec :refer :all]))
 
-(defn mock-exit [status message]
-  status)
 
 (describe "validate cli"
   (context "user asks for help"

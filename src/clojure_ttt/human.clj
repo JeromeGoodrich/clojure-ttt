@@ -15,7 +15,7 @@
   (let [move (choose-space markers io)]
   (try (validate-move io board move)
     (catch Exception e (do
-                         (print (str (.getMessage e) " That's not a number. Let's try that again!\n"))
+                         (print-io io (str (.getMessage e) " That's not a number. Let's try that again!\n"))
                          (human-make-move board markers io))))))
 
 
