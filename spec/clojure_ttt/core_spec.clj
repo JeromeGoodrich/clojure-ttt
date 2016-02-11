@@ -1,6 +1,4 @@
-(ns clojure-ttt.core-spec
-  (:require [speclj.core :refer :all]
-            [clojure-ttt.core :refer :all]
+(ns clojure-ttt.core-spec (:require [speclj.core :refer :all] [clojure-ttt.core :refer :all]
             [clojure-ttt.config :refer :all]
             [clojure-ttt.presenter :refer :all]
             [clojure-ttt.ai :refer :all]

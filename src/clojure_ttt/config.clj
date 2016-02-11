@@ -1,8 +1,7 @@
 (ns clojure-ttt.config
   (:require [clojure-ttt.board :refer :all]
             [clojure-ttt.presenter :refer :all]
-            [clojure-ttt.player :refer :all]
-            [clojure-ttt.ai :refer :all]))
+            [clojure-ttt.player :refer :all]))
 
 (defn player-config [game-type options io]
   (let [difficulty (:difficulty options)

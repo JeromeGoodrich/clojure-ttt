@@ -42,15 +42,20 @@
 ;        new-score (max (find-score(node) score))
 ;   (recur (rest coll-of-nodes) (new-score) ((max (new-score alpha)
 
-(defn alphabeta [node alpha beta maximizing-player?]
+(declare get-max)
+(defn alphabeta [node alpha beta maximizing-player? score]
   (if game-over?
     (get-score node)
-    (if (maximizing-player?)
-      (let [child-nodes (get-child-nodes node)]
-        (loop [child-nodes child-nodes
-               score score
-               alpha alpha]
-          (if (empty? child-nodes))
+    (let [child-nodes (get-child-nodes node)]
+        (cond (and (empty? child-nodes) maximizing-player?)
+        (recur (rest child-node) ((max (alpha (max score))) beta FALSE)
+
+
+      ;get-max returns max score for a set of nodes.
+      ;What needs to happen for this:
+      ;  recur through alphabeta for each node
+      ;  whenever we reach an end-state capture that score
+      ;recur (rest child-nodes)(res
 
 
 
