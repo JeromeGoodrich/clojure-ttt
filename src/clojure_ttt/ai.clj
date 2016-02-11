@@ -15,6 +15,46 @@
   (apply min-key :score scored-boards))
 
 
+;node - consists of board and space and score
+
+;defn (alpha-beta [node depth alpha beta maximizing-player? depth-limit]
+; (if (game-over?
+;  (find-score space board)
+;  (if (= current-marker starting-marker)
+;    (let [score -infinity
+;    (generate child nodes - find unmarked spaces on current node and mark those spaces return the parent node space and the newly marked boards
+;    this gives us a collection of child nodes how to call recur on each of these?
+;    score = max between score and (recur child-node depth alpha beta FALSE depth limit)
+;    alpha = max between (alpha and score)
+;    if beta <= alpha
+;    return value
+
+;    this presents several problems for tail recursion because in order to alter alpha we need to have already got the score for a node.
+;    SO how to get around this?
+;    "the trick is to turn the for-each with break into a recursion with an appropriate base case"
+;    So in this case it's for each child node. we start off with a collection of nodes we get the score from each one and compare it to alpha/beta
+;    and then set the new score and new alpha/betas accordingly. We stop when there's nothing left in the collection ie when there are no more nodes at that level.
+;   (loop [coll-of-nodes coll-of-nodes
+;          score score
+;          alpha alpha]
+;   base-case = when (coll-of-nodes is empty)
+;   (let node (first coll-of-nodes)
+;        new-score (max (find-score(node) score))
+;   (recur (rest coll-of-nodes) (new-score) ((max (new-score alpha)
+
+(defn alphabeta [node alpha beta maximizing-player?]
+  (if game-over?
+    (get-score node)
+    (if (maximizing-player?)
+      (let [child-nodes (get-child-nodes node)]
+        (loop [child-nodes child-nodes
+               score score
+               alpha alpha]
+          (if (empty? child-nodes))
+
+
+
+
 (defn find-space-score [space board markers starting-marker depth depth-limit]
     (let [current-marker (first markers)]
      (cond

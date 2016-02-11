@@ -7,9 +7,8 @@
   (display-end-result [this result markers])
   (get-input [this]
    (let [return-this (first @input)]
-     (do (swap! input rest)
-         return-this)))
-
+     (swap! input rest)
+         return-this))
   (display-board [this board])
   (prompt [this something]
     (get-input this)))
