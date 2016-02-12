@@ -26,6 +26,24 @@
                                    "X"  7   8]))))
 
 (describe "game-loop"
+  (it "displays te board"
+    (let [io (new-mock-console)
+          computer (new-computer-player 3)
+          game-looper (game-loop ["X" "O" "X" "O" "X" "O" 6 7 8]
+                                 [computer computer]
+                                 ["O" "X"]
+                                 io)]
+    (should-contain "display-board"  @mock-fn-calls)))
+
+  (it "it displays the end result"
+    (let [io (new-mock-console)
+          computer (new-computer-player 3)
+          game-looper (game-loop ["X" "O" "X" "O" "X" "O" 6 7 8]
+                                 [computer computer]
+                                 ["O" "X"]
+                                 io)]
+    (should-contain "display-end-result"  @mock-fn-calls)))
+
   (it "plays through the last 2 moves of a game and returns the board"
     (let [io (new-test-console ["6"])
           human (new-human-player io)
