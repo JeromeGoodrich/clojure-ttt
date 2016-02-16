@@ -5,8 +5,10 @@
 (defn find-unmarked-spaces [board]
   (filter number? board))
 
-(defn create-possible-boards [board spaces markers]
-  (map #(mark-spot (first markers) % board) spaces))
+(defn create-possible-boards [board-state markers]
+  (let [spaces (find-unmarked-spaces board-state)
+        possible-board-states (map #(mark-spot (first markers) %1 board-state) spaces)]
+    (map #(assoc {} :state %1 :space %2) possible-board-states spaces)))
 
 (defn max-by-score [scored-boards]
   (apply max-key :score scored-boards))
@@ -14,34 +16,48 @@
 (defn min-by-score [scored-boards]
   (apply min-key :score scored-boards))
 
+(defrecord Node [parent children board depth player-type markers score])
 
-(defn find-space-score [space board markers starting-marker depth depth-limit]
-    (let [current-marker (first markers)]
-     (cond
-        (and (win-game? board)
-             (= current-marker starting-marker)) (conj space {:score  (- 10 depth)})
-        (and (win-game? board)
-             (not (= current-marker starting-marker))) (conj space {:score (+ depth -10)})
-        (tie-game? board) (conj space {:score 0})
-        :else (let [new-markers (reverse markers)
-                    depth (inc depth)
-                    unmarked-spaces (find-unmarked-spaces board)
-                    boards (create-possible-boards board unmarked-spaces new-markers)
-                    spaces-with-scores (map #(find-space-score space % new-markers starting-marker depth depth-limit) boards)]
-                (cond
-                  (= depth depth-limit) (conj space {:score 0})
-                  (not (= current-marker starting-marker)) (max-by-score spaces-with-scores)
-                  (= current-marker starting-marker) (min-by-score spaces-with-scores))))))
+(defn score-board [board-state player-type depth]
+  (cond
+    (or (= 0 depth) (tie-game? board-state)) 0
+    (and (win-game? board-state) (= "max" player-type)) (- 10 depth)
+    (and (win-game? board-state) (= "min" player-type)) (+ depth -10)
+    :else nil))
 
-(defn get-spaces-with-scores [spaces boards markers starting-marker depth depth-limit]
-  (map #(find-space-score %1  %2 markers starting-marker depth depth-limit) spaces boards))
+(defn minimax [node]
+  (println node)
+  (let [current-node-score (score-board (:state (:board node)) (:player-type node) (:depth node))]
+      (if (or current-node-score (empty? (:children node)) (= 0 (:depth node)))
+        (let [score (or current-node-score (:score node))]
+          (if (nil? (:parent node))
+            (:space (:board node))
+            (if (= (:player-type node) "max")
+              (if (or (nil? (:score (:parent node))) (> score (:score (:parent node))))
+                (recur (-> (:parent node)
+                           (assoc-in [:score] score)
+                           (assoc-in [:board :space] (:space (:board node)))))
+                (recur (:parent node)))
+              (if (or (nil? (:score (:parent node))) (< score (:score (:parent node))))
+                (recur (-> (:parent node)
+                           (assoc-in [:score] score)
+                           (assoc-in [:board :space] (:space (:board node)))))
+                (recur (:parent node))))))
+        (let [next-node (Node. (update-in node [:children] rest) ;we take away the first child since it's being evaluated
+                               (create-possible-boards (first (:children node)) (:markers node))
+                               (first (:children node))
+                               (dec (:depth node))
+                               (if (= (:player-type node) "max") "min" "max")
+                               (reverse (:markers node))
+                               nil)]
+          (recur next-node)))))
 
-(defn ai-make-move [board markers depth-limit]
- (if (= (count board) (count (find-unmarked-spaces board)))
+(defn ai-make-move [board markers depth]
+  (if (= (count board) (count (find-unmarked-spaces board)))
    8
-   (let [unmarked-spaces (find-unmarked-spaces board)
-         boards (create-possible-boards board unmarked-spaces markers)
-         spaces (map #(hash-map :space %) unmarked-spaces)
-         starting-marker (first markers)
-         spaces-with-scores (get-spaces-with-scores spaces boards markers starting-marker 0 depth-limit)]
-     (:space (max-by-score spaces-with-scores)))))
+   (let [node (Node. nil (create-possible-boards board markers) {:state board} depth "max" markers nil)]
+    (minimax node))))
+
+
+
+

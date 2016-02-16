@@ -16,8 +16,7 @@
     (tie-game? board) true
     :else
       (if (= current-marker starting-marker)
-        (let [unmarked-spaces (find-unmarked-spaces board)
-              boards (create-possible-boards board unmarked-spaces markers)]
+        (let [boards (create-possible-boards board markers)]
           (flatten (map #(gen-all-boards % (reverse markers) starting-marker ai depth-limit) boards)))
         (let [move (ai board markers depth-limit)
               board (mark-spot (first markers) move board)]
