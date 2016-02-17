@@ -45,10 +45,10 @@
     (should-contain "display-end-result"  @mock-fn-calls)))
 
   (it "plays through the last 2 moves of a game and returns the board"
-    (let [io (new-test-console ["6"])
+    (let [io (new-test-console ["8"])
           human (new-human-player io)
           computer (new-computer-player 3)]
-    (should= ["X" "O" "X" "O" "X" "O" "X" 7 "O"]
+    (should= ["X" "O" "X" "O" "X" "O" "O" 7 "X"]
              (game-loop ["X" "O" "X" "O" "X" "O" 6 7 8]
                              [computer human]
                              ["O" "X"]

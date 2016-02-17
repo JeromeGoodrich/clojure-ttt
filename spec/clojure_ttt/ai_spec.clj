@@ -7,6 +7,8 @@
 (defn random-ai [board markers depth-limit]
   (rand-nth (find-unmarked-spaces board)))
 
+(defn gen-possible-boards [board markers]
+  (map #(mark-spot (first markers) % board) (find-unmarked-spaces board)))
 
 (defn gen-all-boards [board markers starting-marker ai depth-limit]
   (let [current-marker (first markers)]
@@ -16,7 +18,7 @@
     (tie-game? board) true
     :else
       (if (= current-marker starting-marker)
-        (let [boards (create-possible-boards board markers)]
+        (let [boards (gen-possible-boards board markers)]
           (flatten (map #(gen-all-boards % (reverse markers) starting-marker ai depth-limit) boards)))
         (let [move (ai board markers depth-limit)
               board (mark-spot (first markers) move board)]
@@ -40,28 +42,28 @@
                               "O" "X" "X"
                                6   7  "X"] ["O" "X"] 8)))
 
-  (it "blocks the opponent from winning"
+  (it "blocks the opponent from winning 1"
     (should= 6 (ai-make-move ["X" "O" "X"
                               "X" "O" "O"
                                6  "X"  8 ] ["O" "X"] 8)))
 
-  (it "blocks the opponent from winning"
+  (it "blocks the opponent from winning 2"
     (should= 8 (ai-make-move ["X" "O" "X"
                               "O" "O" "X"
                                6  "X"  8 ] ["O" "X"] 8)))
 
-  (it "blocks the opponent from winning"
+  (it "blocks the opponent from winning 3"
     (should= 1 (ai-make-move ["X"  1  "X"
                               "X" "O" "O"
                               "O"  7   8] ["O" "X"] 8)))
 
-  (it "blocks the opponent from winning"
+  (it "blocks the opponent from winning 4"
     (should= 1 (ai-make-move ["X" 1 "X"
                                3 "O" 5
                                6  7  8] ["O" "X"] 8)))
 
   (it "will prevent the opponent from making a 'fork'"
-    (should= 6 (ai-make-move ["X"   1    2
+    (should= 2 (ai-make-move ["X"   1    2
                                3   "X"   5
                                6    7   "O"] ["O" "X"] 8)))
 
@@ -79,7 +81,6 @@
     (should= true  (some false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" random-ai 8)))))
 
   (it "minimax ai will never lose"
-   (pending "")
     (should-not (some false? (flatten (gen-all-boards [0 1 2 3 4 5 6 7 8] ["X" "O"] "X" ai-make-move 8)))))
 
   (it "minimax ai will win around 85% of the time"
