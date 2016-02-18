@@ -15,23 +15,17 @@
         possible-board-states (map #(mark-spot (first markers) %1 board-state) spaces)]
     (map #(assoc {} :state %1 :space %2) possible-board-states spaces)))
 
-(defn max-by-score [scored-boards]
-  (apply max-key :score scored-boards))
+(defrecord Node [parent children board alpha beta depth node-type markers score])
 
-(defn min-by-score [scored-boards]
-  (apply min-key :score scored-boards))
-
-(defrecord Node [parent children board alpha beta depth player-type markers score])
-
-(defn score-board [board-state player-type depth]
+(defn score-board [board-state node-type depth]
   (cond
-    (and (win-game? board-state) (= "max" player-type)) (+ 10 depth)
-    (and (win-game? board-state) (= "min" player-type)) (- depth 10)
+    (and (win-game? board-state) (= "max" node-type)) (+ 10 depth)
+    (and (win-game? board-state) (= "min" node-type)) (- depth 10)
     (or (= 0 depth) (tie-game? board-state)) 0
     :else nil))
 
 (def minimax (memoize (fn [node]
-  (let [current-node-score (score-board (:state (:board node)) (:player-type node) (:depth node))]
+  (let [current-node-score (score-board (:state (:board node)) (:node-type node) (:depth node))]
       (if (or current-node-score
               (empty? (:children node))
               (= 0 (:depth node))
@@ -39,8 +33,9 @@
         (let [score (or current-node-score (:score node))]
           (if (nil? (:parent node))
             (:space (:board node))
-            (if (= (:player-type node) "max")
-              (if (or (nil? (:score (:parent node))) (> score (:score (:parent node))))
+            (if (= (:node-type node) "max")
+              (if (or (nil? (:score (:parent node)))
+                      (> score (:score (:parent node))))
                 (recur (-> (:parent node)
                            (assoc-in [:score] score)
                            (assoc-in [:alpha] (max score (:alpha (:parent node))))
@@ -59,7 +54,7 @@
                                (:alpha node)
                                (:beta node)
                                (dec (:depth node))
-                               (if (= (:player-type node) "max") "min" "max")
+                               (if (= (:node-type node) "max") "min" "max")
                                (reverse (:markers node))
                                nil)]
           (recur new-node)))))))
@@ -69,7 +64,3 @@
    8
    (let [node (Node. nil (create-initial-boards board markers) {:state board} -1000 1000 depth "min" markers nil)]
     (minimax node))))
-
-
-
-
